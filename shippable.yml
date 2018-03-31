@@ -1,0 +1,10 @@
+language: java
+jdk:
+  - oraclejdk8
+build:
+  - mvn clean verify
+integrations:
+  notifications:
+    - integrationName: email
+      type: email
+      recipients: dwwright@alumni.iastate.edu
