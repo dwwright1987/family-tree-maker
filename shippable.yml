@@ -7,4 +7,5 @@ integrations:
   notifications:
     - integrationName: email
       type: email
-      recipients: dwwright@alumni.iastate.edu
+      recipients:
+        - dwwright@alumni.iastate.edu
