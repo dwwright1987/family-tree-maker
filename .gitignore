@@ -3,4 +3,4 @@
 .idea/*
 
 # Build Files
-target/*
+**/target/*
