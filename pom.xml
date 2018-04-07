@@ -7,6 +7,10 @@
     <artifactId>family-tree-maker</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
+    <properties>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
+    </properties>
     <modules>
         <module>family-tree-maker-desktop</module>
     </modules>
