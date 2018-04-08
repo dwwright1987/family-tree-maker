@@ -4,3 +4,6 @@
 
 # Build Files
 **/target/*
+
+# Derby File
+derby.log

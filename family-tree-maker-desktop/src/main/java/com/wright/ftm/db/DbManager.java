@@ -23,7 +23,7 @@ public class DbManager {
     public void startDb() {
         try {
             classWrapper.forName("org.apache.derby.jdbc.EmbeddedDriver");
-            connection = driverManagerWrapper.getConnection("jdbc:derby:derbyDB;create=true");
+            connection = driverManagerWrapper.getConnection("jdbc:derby:c:/ProgramData/wright/family-tree-maker/db/derbyDB;create=true");
         } catch (Exception e) {
             e.printStackTrace();
         }

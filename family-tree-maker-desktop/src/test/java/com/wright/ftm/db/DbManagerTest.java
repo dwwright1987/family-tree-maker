@@ -21,7 +21,7 @@ class DbManagerTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        when(mockDriverMangerWrapper.getConnection("jdbc:derby:derbyDB;create=true")).thenReturn(mockConnection);
+        when(mockDriverMangerWrapper.getConnection("jdbc:derby:c:/ProgramData/wright/family-tree-maker/db/derbyDB;create=true")).thenReturn(mockConnection);
 
         classToTest = DbManager.getInstance();
         classToTest.setClassWrapper(mockClassWrapper);
