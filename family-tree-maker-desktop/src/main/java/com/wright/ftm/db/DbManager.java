@@ -1,5 +1,6 @@
 package com.wright.ftm.db;
 
+import com.wright.ftm.services.DbConfigurationService;
 import com.wright.ftm.wrappers.ClassWrapper;
 import com.wright.ftm.wrappers.DriverManagerWrapper;
 
@@ -24,6 +25,8 @@ public class DbManager {
         try {
             classWrapper.forName("org.apache.derby.jdbc.EmbeddedDriver");
             connection = driverManagerWrapper.getConnection("jdbc:derby:c:/ProgramData/wright/family-tree-maker/db/derbyDB;create=true");
+
+            getDbConfigurationService(connection).configure();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -37,20 +40,26 @@ public class DbManager {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+            connection = null;
         }
     }
 
-    private DbManager() {}
+    DbManager() {}
 
-    public Connection getConnection() {
+    Connection getConnection() {
         return connection;
     }
 
-    public void setClassWrapper(ClassWrapper classWrapper) {
+    DbConfigurationService getDbConfigurationService(Connection connection) {
+        return new DbConfigurationService(connection);
+    }
+
+    void setClassWrapper(ClassWrapper classWrapper) {
         this.classWrapper = classWrapper;
     }
 
-    public void setDriverManagerWrapper(DriverManagerWrapper driverManagerWrapper) {
+    void setDriverManagerWrapper(DriverManagerWrapper driverManagerWrapper) {
         this.driverManagerWrapper = driverManagerWrapper;
     }
 }
