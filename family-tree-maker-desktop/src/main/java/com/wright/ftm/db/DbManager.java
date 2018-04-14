@@ -26,7 +26,7 @@ public class DbManager {
             classWrapper.forName("org.apache.derby.jdbc.EmbeddedDriver");
             connection = driverManagerWrapper.getConnection("jdbc:derby:c:/ProgramData/wright/family-tree-maker/db/derbyDB;create=true");
 
-            getDbConfigurationService(connection).configure();
+            getDbConfigurationService().configure();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,12 +47,12 @@ public class DbManager {
 
     DbManager() {}
 
-    Connection getConnection() {
+    public Connection getConnection() {
         return connection;
     }
 
-    DbConfigurationService getDbConfigurationService(Connection connection) {
-        return new DbConfigurationService(connection);
+    DbConfigurationService getDbConfigurationService() {
+        return new DbConfigurationService();
     }
 
     void setClassWrapper(ClassWrapper classWrapper) {

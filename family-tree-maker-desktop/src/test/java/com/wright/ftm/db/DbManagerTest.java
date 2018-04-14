@@ -132,7 +132,7 @@ class DbManagerTest {
 
     private class DbManagerStub extends DbManager {
         @Override
-        DbConfigurationService getDbConfigurationService(Connection connection) {
+        DbConfigurationService getDbConfigurationService() {
             return mockDbConfigurationService;
         }
     }
