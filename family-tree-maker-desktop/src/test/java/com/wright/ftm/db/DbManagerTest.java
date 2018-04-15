@@ -12,13 +12,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class DbManagerTest {
     private DbManager classToTest;
+    private boolean expectedConfigurationResult = true;
     private ClassWrapper mockClassWrapper = mock(ClassWrapper.class);
     private Connection mockConnection = mock(Connection.class);
     private DbConfigurationService mockDbConfigurationService = mock(DbConfigurationService.class);
@@ -26,6 +25,7 @@ class DbManagerTest {
 
     @BeforeEach
     void setUp() throws Exception {
+        when(mockDbConfigurationService.configure()).thenReturn(expectedConfigurationResult);
         when(mockDriverMangerWrapper.getConnection("jdbc:derby:c:/ProgramData/wright/family-tree-maker/db/derbyDB;create=true")).thenReturn(mockConnection);
 
         classToTest = new DbManagerStub();
@@ -70,10 +70,15 @@ class DbManagerTest {
     }
 
     @Test
+    void testReturnsConfigurationResultOnStart() throws Exception {
+        assertEquals(expectedConfigurationResult, classToTest.startDb());
+    }
+
+    @Test
     void testDoesNotConfigureDbWhenThereIsAnExceptionThrownDuringDbConnection() throws Exception {
         when(mockDriverMangerWrapper.getConnection(anyString())).thenThrow(RuntimeException.class);
 
-        classToTest.startDb();
+        assertFalse(classToTest.startDb());
 
         verifyZeroInteractions(mockDbConfigurationService);
     }

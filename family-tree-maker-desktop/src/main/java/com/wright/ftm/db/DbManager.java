@@ -21,14 +21,14 @@ public class DbManager {
         return instance;
     }
 
-    public void startDb() {
+    public boolean startDb() {
         try {
             classWrapper.forName("org.apache.derby.jdbc.EmbeddedDriver");
             connection = driverManagerWrapper.getConnection("jdbc:derby:c:/ProgramData/wright/family-tree-maker/db/derbyDB;create=true");
 
-            getDbConfigurationService().configure();
+            return getDbConfigurationService().configure();
         } catch (Exception e) {
-            e.printStackTrace();
+            return false;
         }
     }
 
