@@ -26,7 +26,7 @@ class DbConfigurationServiceTest {
     @BeforeEach
     void setUp() throws Exception {
         when(mockConnection.createStatement()).thenReturn(mockStatement);
-        when(mockJarFileReaderService.readJarFile("/scripts/db/initial-schema-000001.sql")).thenReturn("initial statement 1;\r\ninitial statement 2;\r\n");
+        when(mockJarFileReaderService.readAsString("/scripts/db/initial-schema-000001.sql")).thenReturn("initial statement 1;\r\ninitial statement 2;\r\n");
         when(mockTablesRepository.query()).thenReturn(Collections.emptyList());
 
         classToTest = new DbConfigurationService();
@@ -76,7 +76,7 @@ class DbConfigurationServiceTest {
 
     @Test
     void testConfigureReturnsFalseWhenReadingJarFileThrowsIOException() throws Exception {
-        when(mockJarFileReaderService.readJarFile(anyString())).thenThrow(new IOException());
+        when(mockJarFileReaderService.readAsString(anyString())).thenThrow(new IOException());
 
         assertFalse(classToTest.configure());
 

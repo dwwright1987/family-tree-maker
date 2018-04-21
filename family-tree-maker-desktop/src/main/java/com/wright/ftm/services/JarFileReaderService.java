@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class JarFileReaderService {
-    public String readJarFile(String jarPath) throws IOException {
+    public String readAsString(String jarPath) throws IOException {
         StringBuilder contentsBuilder = new StringBuilder();
 
         InputStream inputStream = getClass().getResourceAsStream(jarPath);
@@ -18,5 +18,9 @@ public class JarFileReaderService {
         }
 
         return contentsBuilder.toString();
+    }
+
+    public InputStream readAsInputStream(String jarPath) {
+        return getClass().getResourceAsStream( jarPath);
     }
 }

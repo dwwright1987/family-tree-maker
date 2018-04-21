@@ -1,6 +1,7 @@
 package com.wright.ftm;
 
 import com.wright.ftm.db.DbManager;
+import com.wright.ftm.services.LoggerConfigurationService;
 import com.wright.ftm.stages.FatalAlert;
 import com.wright.ftm.stages.StageUtils;
 import javafx.application.Application;
@@ -10,6 +11,9 @@ public class GuiMain extends Application {
     private DbManager dbManager = DbManager.getInstance();
 
     public static void main(String[] args) {
+        LoggerConfigurationService loggerConfigurationService = new LoggerConfigurationService();
+        loggerConfigurationService.configure();
+
         launch(args);
     }
 

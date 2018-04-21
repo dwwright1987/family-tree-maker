@@ -4,7 +4,6 @@ import com.wright.ftm.db.DbManager;
 import com.wright.ftm.repositories.TablesRepository;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -34,7 +33,7 @@ public class DbConfigurationService {
     }
 
     private void executeScript(String scriptJarPath) throws IOException, SQLException {
-        String scriptContents = jarFileReaderService.readJarFile(scriptJarPath);
+        String scriptContents = jarFileReaderService.readAsString(scriptJarPath);
         String[] statements = scriptContents.trim().split(";");
         for (String statement : statements) {
             executeStatement(statement.trim());
