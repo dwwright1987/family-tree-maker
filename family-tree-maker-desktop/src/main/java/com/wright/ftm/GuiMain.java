@@ -3,9 +3,9 @@ package com.wright.ftm;
 import com.wright.ftm.db.DbManager;
 import com.wright.ftm.services.LoggerConfigurationService;
 import com.wright.ftm.ui.alerts.FatalAlert;
+import com.wright.ftm.ui.scenes.FamilyTreeBuilderSceneFactory;
 import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.application.Application;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +32,7 @@ public class GuiMain extends Application {
         primaryStage.setHeight(700);
         primaryStage.setWidth(1300);
         primaryStage.setTitle("Family Tree Maker");
+        primaryStage.setScene(FamilyTreeBuilderSceneFactory.buildScene(primaryStage));
 
         UiLocationUtils.center(primaryStage);
 
