@@ -1,5 +1,6 @@
-package com.wright.ftm.stages;
+package com.wright.ftm.ui.alerts;
 
+import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
@@ -13,7 +14,7 @@ public class FatalAlert {
            owningStage.close();
         });
 
-        StageUtils.center((Stage) alert.getDialogPane().getScene().getWindow());
+        UiLocationUtils.center((Stage) alert.getDialogPane().getScene().getWindow());
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
