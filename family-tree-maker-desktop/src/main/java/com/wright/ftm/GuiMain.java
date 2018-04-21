@@ -39,7 +39,7 @@ public class GuiMain extends Application {
         if (!databaseSuccessfullyStarted) {
             FatalAlert.show(primaryStage, "Failed to load data!");
         }
-        getLogger().info("App startup");
+        getLogger().info("App started");
     }
 
     public void stop() throws Exception {

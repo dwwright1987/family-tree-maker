@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.wright.ftm.Constants.WINDOWS_ROOT_APP_STORAGE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -26,7 +27,7 @@ class DbManagerTest {
     @BeforeEach
     void setUp() throws Exception {
         when(mockDbConfigurationService.configure()).thenReturn(expectedConfigurationResult);
-        when(mockDriverMangerWrapper.getConnection("jdbc:derby:c:/ProgramData/wright/family-tree-maker/db/derbyDB;create=true")).thenReturn(mockConnection);
+        when(mockDriverMangerWrapper.getConnection("jdbc:derby:" + WINDOWS_ROOT_APP_STORAGE_PATH + "/db/derbyDB;create=true")).thenReturn(mockConnection);
 
         classToTest = new DbManagerStub();
         classToTest.setClassWrapper(mockClassWrapper);

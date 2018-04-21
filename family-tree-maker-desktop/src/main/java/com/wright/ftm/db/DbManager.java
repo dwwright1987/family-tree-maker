@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static com.wright.ftm.Constants.WINDOWS_ROOT_APP_STORAGE_PATH;
+
 public class DbManager {
     private final Logger logger = LoggerFactory.getLogger(DbManager.class);
     private static DbManager instance;
@@ -28,7 +30,7 @@ public class DbManager {
         try {
             logger.info("Connecting to database...");
             classWrapper.forName("org.apache.derby.jdbc.EmbeddedDriver");
-            connection = driverManagerWrapper.getConnection("jdbc:derby:c:/ProgramData/wright/family-tree-maker/db/derbyDB;create=true");
+            connection = driverManagerWrapper.getConnection("jdbc:derby:" + WINDOWS_ROOT_APP_STORAGE_PATH + "/db/derbyDB;create=true");
             logger.info("Database connection established");
 
             return getDbConfigurationService().configure();
