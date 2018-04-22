@@ -1,5 +1,7 @@
 package com.wright.ftm.ui.scenes;
 
+import com.wright.ftm.services.FamilyTreesService;
+import com.wright.ftm.ui.alerts.WarningAlert;
 import com.wright.ftm.ui.utils.GraphicsUtils;
 import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.collections.FXCollections;
@@ -17,7 +19,8 @@ import static com.wright.ftm.Constants.DEFAULT_PADDING;
 
 public class FamilyTreeBuilderScene {
     private static final String NO_FAMILIES_EXIST = "No Families Exist.";
-    private static final ObservableList<String> familyTreeNames = FXCollections.observableArrayList();
+    private static final FamilyTreesService FAMILY_TREES_SERVICE = new FamilyTreesService();
+    private static final ObservableList<String> familyTrees = FXCollections.observableArrayList();
 
     public static Scene build(Stage primaryStage) {
         return new Scene(createBorderPane(primaryStage));
@@ -73,11 +76,11 @@ public class FamilyTreeBuilderScene {
     }
 
     private static ListView<String> createFamilyTreeNamesView() {
-        familyTreeNames.add(NO_FAMILIES_EXIST);
+        familyTrees.add(NO_FAMILIES_EXIST);
 
         ListView<String> familyTreeNamesView = new ListView<>();
         familyTreeNamesView.setEditable(false);
-        familyTreeNamesView.setItems(familyTreeNames.sorted());
+        familyTreeNamesView.setItems(familyTrees.sorted());
 
         return familyTreeNamesView;
     }
@@ -103,11 +106,15 @@ public class FamilyTreeBuilderScene {
 
         familyNameDialog.showAndWait().ifPresent(familyName -> {
             if (StringUtils.isNotEmpty(familyName)) {
-                if (familyTreeNames.contains(NO_FAMILIES_EXIST)) {
-                    familyTreeNames.clear();
+                if (familyTrees.contains(NO_FAMILIES_EXIST)) {
+                    familyTrees.clear();
                 }
 
-                familyTreeNames.add(familyName);
+                if (FAMILY_TREES_SERVICE.createFamilyTree(familyName)) {
+                    familyTrees.add(familyName);
+                } else {
+                    WarningAlert.show("Could not create family tree: " + familyName);
+                }
             }
         });
     }
