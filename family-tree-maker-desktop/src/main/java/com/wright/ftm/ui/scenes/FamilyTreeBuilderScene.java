@@ -19,7 +19,7 @@ import static com.wright.ftm.Constants.DEFAULT_PADDING;
 
 public class FamilyTreeBuilderScene {
     private static final String NO_FAMILIES_EXIST = "No Families Exist.";
-    private static final FamilyTreesService FAMILY_TREES_SERVICE = new FamilyTreesService();
+    private static final FamilyTreesService familyTreesService = new FamilyTreesService();
     private static final ObservableList<String> familyTrees = FXCollections.observableArrayList();
 
     public static Scene build(Stage primaryStage) {
@@ -110,7 +110,7 @@ public class FamilyTreeBuilderScene {
                     familyTrees.clear();
                 }
 
-                if (FAMILY_TREES_SERVICE.createFamilyTree(familyName)) {
+                if (familyTreesService.createFamilyTree(familyName)) {
                     familyTrees.add(familyName);
                 } else {
                     WarningAlert.show("Could not create family tree: " + familyName);
