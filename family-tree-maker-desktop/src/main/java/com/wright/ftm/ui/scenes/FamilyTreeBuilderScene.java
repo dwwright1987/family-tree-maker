@@ -1,5 +1,6 @@
 package com.wright.ftm.ui.scenes;
 
+import com.wright.ftm.ui.utils.GraphicsUtils;
 import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -96,7 +97,9 @@ public class FamilyTreeBuilderScene {
         familyNameDialog.setHeaderText("Family Name");
         familyNameDialog.setContentText("Enter family name:");
 
-        UiLocationUtils.center((Stage) familyNameDialog.getDialogPane().getScene().getWindow());
+        Stage familyNameStage = (Stage) familyNameDialog.getDialogPane().getScene().getWindow();
+        GraphicsUtils.addAppIcon(familyNameStage);
+        UiLocationUtils.center(familyNameStage);
 
         familyNameDialog.showAndWait().ifPresent(familyName -> {
             if (StringUtils.isNotEmpty(familyName)) {

@@ -4,6 +4,7 @@ import com.wright.ftm.db.DbManager;
 import com.wright.ftm.services.LoggerConfigurationService;
 import com.wright.ftm.ui.alerts.FatalAlert;
 import com.wright.ftm.ui.scenes.FamilyTreeBuilderScene;
+import com.wright.ftm.ui.utils.GraphicsUtils;
 import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -34,6 +35,7 @@ public class GuiMain extends Application {
         primaryStage.setTitle("Family Tree Maker");
         primaryStage.setScene(FamilyTreeBuilderScene.build(primaryStage));
 
+        GraphicsUtils.addAppIcon(primaryStage);
         UiLocationUtils.center(primaryStage);
 
         primaryStage.show();

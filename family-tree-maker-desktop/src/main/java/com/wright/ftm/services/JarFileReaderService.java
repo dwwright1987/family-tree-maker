@@ -1,5 +1,7 @@
 package com.wright.ftm.services;
 
+import javafx.scene.image.Image;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,5 +24,9 @@ public class JarFileReaderService {
 
     public InputStream readAsInputStream(String jarPath) {
         return getClass().getResourceAsStream( jarPath);
+    }
+
+    public Image getImage(String jarPath) {
+        return new Image(getClass().getResourceAsStream(jarPath));
     }
 }
