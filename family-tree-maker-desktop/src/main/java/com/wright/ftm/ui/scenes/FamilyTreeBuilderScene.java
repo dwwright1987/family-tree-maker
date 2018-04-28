@@ -1,5 +1,6 @@
 package com.wright.ftm.ui.scenes;
 
+import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.services.FamilyTreesService;
 import com.wright.ftm.ui.alerts.WarningAlert;
 import com.wright.ftm.ui.utils.GraphicsUtils;
@@ -14,6 +15,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.wright.ftm.Constants.DEFAULT_PADDING;
 
@@ -76,11 +80,17 @@ public class FamilyTreeBuilderScene {
     }
 
     private static ListView<String> createFamilyTreeNamesView() {
-        familyTrees.add(NO_FAMILIES_EXIST);
+        List<FamilyTreeDTO> allFamilyTrees = familyTreesService.getAllFamilyTrees();
+        if (allFamilyTrees.isEmpty()) {
+            familyTrees.add(NO_FAMILIES_EXIST);
+        } else {
+            List<String> allFamilyTreeNames = allFamilyTrees.stream().map(FamilyTreeDTO::getName).collect(Collectors.toList());
+            familyTrees.addAll(allFamilyTreeNames); //TODO: Can I put the whole FamilyTreeDTO object here?
+        }
 
         ListView<String> familyTreeNamesView = new ListView<>();
         familyTreeNamesView.setEditable(false);
-        familyTreeNamesView.setItems(familyTrees.sorted());
+        familyTreeNamesView.setItems(familyTrees.sorted()); //TODO: Sort so lower case are in the same order as upper case
 
         return familyTreeNamesView;
     }

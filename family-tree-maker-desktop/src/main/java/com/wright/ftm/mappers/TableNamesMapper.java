@@ -9,7 +9,7 @@ public class TableNamesMapper {
     public List<String> map(ResultSet resultSet) throws SQLException {
         List<String> tableNames = new ArrayList<>();
 
-        while( resultSet.next()) {
+        while (resultSet.next()) {
             tableNames.add(resultSet.getString( "TABLE_NAME"));
         }
 
