@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import static com.wright.ftm.Constants.WINDOWS_ROOT_APP_STORAGE_PATH;
@@ -23,9 +25,11 @@ class DbManagerTest {
     private Connection mockConnection = mock(Connection.class);
     private DbConfigurationService mockDbConfigurationService = mock(DbConfigurationService.class);
     private DriverManagerWrapper mockDriverMangerWrapper = mock(DriverManagerWrapper.class);
+    private Statement mockStatement = mock(Statement.class);
 
     @BeforeEach
     void setUp() throws Exception {
+        when(mockConnection.createStatement()).thenReturn(mockStatement);
         when(mockDbConfigurationService.configure()).thenReturn(expectedConfigurationResult);
         when(mockDriverMangerWrapper.getConnection("jdbc:derby:" + WINDOWS_ROOT_APP_STORAGE_PATH + "/db/derbyDB;create=true")).thenReturn(mockConnection);
 
@@ -134,6 +138,31 @@ class DbManagerTest {
         classToTest.stopDb();
 
         assertNull(classToTest.getConnection());
+    }
+
+    @Test
+    void testUpdateExecutesGivenStatementAsAnUpdate() throws Exception {
+        String expectedUpdateStatement = "CREATE TABLE BLAH";
+
+        classToTest.startDb();
+
+        classToTest.update(expectedUpdateStatement);
+
+        verify(mockStatement).executeUpdate(expectedUpdateStatement);
+    }
+
+    @Test
+    void testQueryReturnsResultSetFromQuery() throws Exception {
+        String expectedQueryStatement = "SELECT * FROM BLAH";
+        ResultSet mockResultSet = mock(ResultSet.class);
+
+        when(mockStatement.executeQuery(expectedQueryStatement)).thenReturn(mockResultSet);
+
+        classToTest.startDb();
+
+        ResultSet actualResultSet = classToTest.query(expectedQueryStatement);
+
+        assertEquals(mockResultSet, actualResultSet);
     }
 
     private class DbManagerStub extends DbManager {

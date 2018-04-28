@@ -1,14 +1,13 @@
 package com.wright.ftm.repositories;
 
+import com.wright.ftm.db.DbManager;
 import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.mappers.FamilyTreesMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,17 +16,13 @@ import static org.mockito.Mockito.*;
 
 class FamilyTreesRepositoryTest {
     private FamilyTreesRepository classToTest;
+    private final DbManager mockDbManager = mock(DbManager.class);
     private FamilyTreesMapper mockFamilyTreesMapper = mock(FamilyTreesMapper.class);
-    private Statement mockStatement = mock(Statement.class);
 
     @BeforeEach
     void setUp() throws Exception {
-        Connection mockConnection = mock(Connection.class);
-
-        when(mockConnection.createStatement()).thenReturn(mockStatement);
-
         classToTest = new FamilyTreesRepository();
-        classToTest.setConnection(mockConnection);
+        classToTest.setDbManager(mockDbManager);
         classToTest.setFamilyTreesMapper(mockFamilyTreesMapper);
     }
 
@@ -39,7 +34,7 @@ class FamilyTreesRepositoryTest {
 
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
 
-        verify(mockStatement).executeUpdate(stringArgumentCaptor.capture());
+        verify(mockDbManager).update(stringArgumentCaptor.capture());
 
         String expectedStatement = "INSERT INTO FAMILY_TREES (NAME) VALUES ('" + expectedFamilyName + "')";
         assertEquals(expectedStatement, stringArgumentCaptor.getValue());
@@ -52,8 +47,8 @@ class FamilyTreesRepositoryTest {
 
         ResultSet mockResultSet = mock(ResultSet.class);
 
+        when(mockDbManager.query("SELECT * FROM FAMILY_TREES")).thenReturn(mockResultSet);
         when(mockFamilyTreesMapper.map(mockResultSet)).thenReturn(expectedFamilyTreeDTOS);
-        when(mockStatement.executeQuery("SELECT * FROM FAMILY_TREES")).thenReturn(mockResultSet);
 
         List<FamilyTreeDTO> actualFamilyTreesDTOs = classToTest.getAllFamilyTrees();
 

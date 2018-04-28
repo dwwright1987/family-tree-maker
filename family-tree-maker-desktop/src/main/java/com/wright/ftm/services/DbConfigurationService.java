@@ -6,22 +6,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 public class DbConfigurationService {
     private final Logger logger = LoggerFactory.getLogger(DbConfigurationService.class);
-    private Connection connection = DbManager.getInstance().getConnection();
+    private DbManager dbManager = DbManager.getInstance();
     private JarFileReaderService jarFileReaderService = new JarFileReaderService();
-    private TablesRepository tablesRepository = new TablesRepository(connection);
+    private TablesRepository tablesRepository = new TablesRepository();
 
     public boolean configure() {
         try {
             logger.info("Configuring database...");
             List<String> tableNames = tablesRepository.query();
             if (tableNames.contains("DB_VERSION")) {
-                executeStatement("SET SCHEMA FAMILY_TREE_MAKER");
+                dbManager.update("SET SCHEMA FAMILY_TREE_MAKER");
             } else {
                 runInitialConfiguration();
             }
@@ -46,18 +45,14 @@ public class DbConfigurationService {
         String scriptContents = jarFileReaderService.readAsString(scriptJarPath);
         String[] statements = scriptContents.trim().split(";");
         for (String statement : statements) {
-            executeStatement(statement.trim());
+            dbManager.update(statement.trim());
         }
 
         logger.info("Script execution complete");
     }
 
-    private void executeStatement(String statementString) throws SQLException {
-        connection.createStatement().executeUpdate(statementString);
-    }
-
-    void setConnection(Connection connection) {
-        this.connection = connection;
+    void setDbManager(DbManager dbManager) {
+        this.dbManager = dbManager;
     }
 
     void setJarFileReaderService(JarFileReaderService jarFileReaderService) {

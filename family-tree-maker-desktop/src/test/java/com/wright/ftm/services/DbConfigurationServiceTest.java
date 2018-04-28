@@ -1,13 +1,12 @@
 package com.wright.ftm.services;
 
+import com.wright.ftm.db.DbManager;
 import com.wright.ftm.repositories.TablesRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -18,19 +17,17 @@ import static org.mockito.Mockito.*;
 class DbConfigurationServiceTest {
     private DbConfigurationService classToTest;
     private String initialTableName = "DB_VERSION";
-    private Connection mockConnection = mock(Connection.class);
+    private DbManager mockDbManager = mock(DbManager.class);
     private JarFileReaderService mockJarFileReaderService = mock(JarFileReaderService.class);
-    private Statement mockStatement = mock(Statement.class);
     private TablesRepository mockTablesRepository = mock(TablesRepository.class);
 
     @BeforeEach
     void setUp() throws Exception {
-        when(mockConnection.createStatement()).thenReturn(mockStatement);
         when(mockJarFileReaderService.readAsString("/scripts/db/initial-schema-000001.sql")).thenReturn("initial statement 1;\r\ninitial statement 2;\r\n");
         when(mockTablesRepository.query()).thenReturn(Collections.emptyList());
 
         classToTest = new DbConfigurationService();
-        classToTest.setConnection(mockConnection);
+        classToTest.setDbManager(mockDbManager);
         classToTest.setJarFileReaderService(mockJarFileReaderService);
         classToTest.setTablesRepository(mockTablesRepository);
     }
@@ -44,9 +41,9 @@ class DbConfigurationServiceTest {
     void testConfigureRunsInitialScriptWhenInitialConfigurationIsNotAlreadyDone() throws Exception {
         classToTest.configure();
 
-        verify(mockStatement, times(2)).executeUpdate(anyString());
-        verify(mockStatement).executeUpdate("initial statement 1");
-        verify(mockStatement).executeUpdate("initial statement 2");
+        verify(mockDbManager, times(2)).update(anyString());
+        verify(mockDbManager).update("initial statement 1");
+        verify(mockDbManager).update("initial statement 2");
     }
 
     @Test
@@ -62,7 +59,7 @@ class DbConfigurationServiceTest {
 
         classToTest.configure();
 
-        verify(mockStatement).executeUpdate("SET SCHEMA FAMILY_TREE_MAKER");
+        verify(mockDbManager).update("SET SCHEMA FAMILY_TREE_MAKER");
     }
 
     @Test
@@ -71,7 +68,7 @@ class DbConfigurationServiceTest {
 
         assertFalse(classToTest.configure());
 
-        verifyZeroInteractions(mockConnection);
+        verifyZeroInteractions(mockDbManager);
     }
 
     @Test
@@ -80,19 +77,12 @@ class DbConfigurationServiceTest {
 
         assertFalse(classToTest.configure());
 
-        verifyZeroInteractions(mockConnection);
+        verifyZeroInteractions(mockDbManager);
     }
 
     @Test
-    void testConfigureReturnsFalseWhenCreatingStatementThrowsSQLException() throws Exception {
-        when(mockConnection.createStatement()).thenThrow(new SQLException());
-
-        assertFalse(classToTest.configure());
-    }
-
-    @Test
-    void testConfigureReturnsFalseWhenExecutingStatementThrowsSQLException() throws Exception {
-        when(mockStatement.executeUpdate(anyString())).thenThrow(new SQLException());
+    void testConfigureReturnsFalseWhenUpdatingThrowsSQLException() throws Exception {
+        doThrow(new SQLException()).when(mockDbManager).update(anyString());
 
         assertFalse(classToTest.configure());
     }

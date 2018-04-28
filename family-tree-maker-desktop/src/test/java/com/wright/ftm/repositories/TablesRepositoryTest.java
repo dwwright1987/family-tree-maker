@@ -31,7 +31,8 @@ class TablesRepositoryTest {
         when(mockDatabaseMetaData.getTables(eq(null), eq(null), eq(null), any(String[].class))).thenReturn(mockResultSet);
         when(mockTableNamesMapper.map(mockResultSet)).thenReturn(expectedTableNames);
 
-        classToTest = new TablesRepository(mockConnection);
+        classToTest = new TablesRepository();
+        classToTest.setConnection(mockConnection);
         classToTest.setTableNamesMapper(mockTableNamesMapper);
     }
 

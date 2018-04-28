@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.wright.ftm.Constants.WINDOWS_ROOT_APP_STORAGE_PATH;
@@ -53,6 +54,14 @@ public class DbManager {
 
             connection = null;
         }
+    }
+
+    public void update(String statement) throws SQLException {
+        connection.createStatement().executeUpdate(statement);
+    }
+
+    public ResultSet query(String statement) throws SQLException {
+        return connection.createStatement().executeQuery(statement);
     }
 
     DbManager() {}
