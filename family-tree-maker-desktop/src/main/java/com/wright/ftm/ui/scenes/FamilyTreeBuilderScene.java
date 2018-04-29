@@ -17,14 +17,13 @@ import javafx.stage.Stage;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.wright.ftm.Constants.DEFAULT_PADDING;
 
 public class FamilyTreeBuilderScene {
     private static final String NO_FAMILIES_EXIST = "No Families Exist.";
     private static final FamilyTreesService familyTreesService = new FamilyTreesService();
-    private static final ObservableList<String> familyTrees = FXCollections.observableArrayList();
+    private static final ObservableList<FamilyTreeDTO> familyTrees = FXCollections.observableArrayList();
 
     public static Scene build(Stage primaryStage) {
         return new Scene(createBorderPane(primaryStage));
@@ -64,7 +63,7 @@ public class FamilyTreeBuilderScene {
     }
 
     private static VBox createFamiliesPane() {
-        ListView<String> familyTreeNamesView = createFamilyTreeNamesView();
+        ListView<FamilyTreeDTO> familyTreesView = createFamilyTreesView();
 
         VBox familiesBox = new VBox();
         familiesBox.setBorder(new Border(new BorderStroke(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.NONE , BorderStrokeStyle.NONE, CornerRadii.EMPTY, BorderWidths.DEFAULT, Insets.EMPTY)));
@@ -72,25 +71,32 @@ public class FamilyTreeBuilderScene {
         familiesBox.setAlignment(Pos.CENTER);
         familiesBox.setPadding(new Insets(DEFAULT_PADDING));
         familiesBox.setSpacing(DEFAULT_PADDING);
-        familiesBox.getChildren().addAll(familyTreeNamesView, createCreateFamilyTreeButton());
+        familiesBox.getChildren().addAll(familyTreesView, createCreateFamilyTreeButton());
 
-        familyTreeNamesView.prefHeightProperty().bind(familiesBox.heightProperty());
+        familyTreesView.prefHeightProperty().bind(familiesBox.heightProperty());
 
         return familiesBox;
     }
 
-    private static ListView<String> createFamilyTreeNamesView() {
+    private static ListView<FamilyTreeDTO> createFamilyTreesView() {
         List<FamilyTreeDTO> allFamilyTrees = familyTreesService.getAllFamilyTrees();
         if (allFamilyTrees.isEmpty()) {
-            familyTrees.add(NO_FAMILIES_EXIST);
+            familyTrees.add(createFamilyTree(NO_FAMILIES_EXIST));
         } else {
-            List<String> allFamilyTreeNames = allFamilyTrees.stream().map(FamilyTreeDTO::getName).collect(Collectors.toList());
-            familyTrees.addAll(allFamilyTreeNames); //TODO: Can I put the whole FamilyTreeDTO object here?
+            familyTrees.addAll(allFamilyTrees);
         }
 
-        ListView<String> familyTreeNamesView = new ListView<>();
+        ListView<FamilyTreeDTO> familyTreeNamesView = new ListView<>();
         familyTreeNamesView.setEditable(false);
-        familyTreeNamesView.setItems(familyTrees.sorted()); //TODO: Sort so lower case are in the same order as upper case
+        familyTreeNamesView.setItems(familyTrees); //TODO: Sort so lower case are in the same order as upper case
+        familyTreeNamesView.setCellFactory(param -> new ListCell<FamilyTreeDTO>() {
+            protected void updateItem(FamilyTreeDTO item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    setText(item.getName());
+                }
+            }
+        });
 
         return familyTreeNamesView;
     }
@@ -116,16 +122,23 @@ public class FamilyTreeBuilderScene {
 
         familyNameDialog.showAndWait().ifPresent(familyName -> {
             if (StringUtils.isNotEmpty(familyName)) {
-                if (familyTrees.contains(NO_FAMILIES_EXIST)) {
+                if (familyTrees.size() == 1 && NO_FAMILIES_EXIST.equals(familyTrees.get(0).getName())) {
                     familyTrees.clear();
                 }
 
                 if (familyTreesService.createFamilyTree(familyName)) {
-                    familyTrees.add(familyName);
+                    familyTrees.add(createFamilyTree(familyName));
                 } else {
                     WarningAlert.show("Could not create family tree: " + familyName);
                 }
             }
         });
+    }
+
+    private static FamilyTreeDTO createFamilyTree(String name) {
+        FamilyTreeDTO familyTreeDTO = new FamilyTreeDTO();
+        familyTreeDTO.setName(name);
+
+        return familyTreeDTO;
     }
 }
