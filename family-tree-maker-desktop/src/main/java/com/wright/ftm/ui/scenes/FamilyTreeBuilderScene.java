@@ -3,6 +3,7 @@ package com.wright.ftm.ui.scenes;
 import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.services.FamilyTreesService;
 import com.wright.ftm.ui.alerts.WarningAlert;
+import com.wright.ftm.ui.utils.FamilyTreeComparator;
 import com.wright.ftm.ui.utils.GraphicsUtils;
 import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.collections.FXCollections;
@@ -88,7 +89,7 @@ public class FamilyTreeBuilderScene {
 
         ListView<FamilyTreeDTO> familyTreeNamesView = new ListView<>();
         familyTreeNamesView.setEditable(false);
-        familyTreeNamesView.setItems(familyTrees); //TODO: Sort so lower case are in the same order as upper case
+        familyTreeNamesView.setItems(familyTrees.sorted(new FamilyTreeComparator()));
         familyTreeNamesView.setCellFactory(param -> new ListCell<FamilyTreeDTO>() {
             protected void updateItem(FamilyTreeDTO item, boolean empty) {
                 super.updateItem(item, empty);
