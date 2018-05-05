@@ -32,6 +32,10 @@ public class FamilyTreesService { //TODO: Integration tests
         }
     }
 
+    public void removeFamilyTree(FamilyTreeDTO familyTreeDTO) {
+
+    }
+
     void setFamilyTreesRepository(FamilyTreesRepository familyTreesRepository) {
         this.familyTreesRepository = familyTreesRepository;
     }

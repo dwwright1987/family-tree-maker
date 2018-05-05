@@ -1,5 +1,6 @@
 package com.wright.ftm.db;
 
+import com.wright.ftm.Constants;
 import com.wright.ftm.services.DbConfigurationService;
 import com.wright.ftm.wrappers.ClassWrapper;
 import com.wright.ftm.wrappers.DriverManagerWrapper;
@@ -32,7 +33,7 @@ public class DbManager {
     public boolean startDb() {
         try {
             logger.info("Connecting to database...");
-            classWrapper.forName("org.apache.derby.jdbc.EmbeddedDriver");
+            classWrapper.forName(Constants.DERBY_EMBEDDED_DRIVER_CLASS);
             connection = driverManagerWrapper.getConnection(derbyUrl);
             logger.info("Database connection established");
 
