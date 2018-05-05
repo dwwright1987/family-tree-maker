@@ -62,7 +62,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <argLine>${failsafeArgLine}</argLine>
+                    <argLine>${testArgLine}</argLine>
                     <includes>
                         <include>**/*IntegrationTest.java</include>
                     </includes>
