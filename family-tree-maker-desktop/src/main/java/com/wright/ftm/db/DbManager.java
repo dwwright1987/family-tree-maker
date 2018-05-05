@@ -31,7 +31,7 @@ public class DbManager {
         try {
             logger.info("Connecting to database...");
             classWrapper.forName("org.apache.derby.jdbc.EmbeddedDriver");
-            connection = driverManagerWrapper.getConnection("jdbc:derby:" + WINDOWS_ROOT_APP_STORAGE_PATH + "/db/derbyDB;create=true");
+            connection = driverManagerWrapper.getConnection(getDerbyUrl());
             logger.info("Database connection established");
 
             return getDbConfigurationService().configure();
@@ -68,6 +68,10 @@ public class DbManager {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    String getDerbyUrl() {
+        return "jdbc:derby:" + WINDOWS_ROOT_APP_STORAGE_PATH + "/db/derbyDB;create=true";
     }
 
     DbConfigurationService getDbConfigurationService() {
