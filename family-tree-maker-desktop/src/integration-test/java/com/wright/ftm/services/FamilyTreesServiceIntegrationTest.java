@@ -8,14 +8,17 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FamilyTreesServiceIntegrationTest {
+    private IntegrationDbManager dbManager;
+
     @BeforeEach
     void setUp() throws Exception {
-        IntegrationDbManager.getInstance().startDb();
+        dbManager = new IntegrationDbManager();
+        dbManager.startDb();
     }
 
     @AfterEach
     void tearDown() throws Exception {
-        IntegrationDbManager.getInstance().stopDb();
+        dbManager.stopDb();
     }
 
     @Test
