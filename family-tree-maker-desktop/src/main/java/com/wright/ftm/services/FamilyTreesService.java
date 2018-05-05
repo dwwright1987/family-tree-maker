@@ -32,8 +32,13 @@ public class FamilyTreesService { //TODO: Integration tests
         }
     }
 
-    public void removeFamilyTree(FamilyTreeDTO familyTreeDTO) {
-
+    public boolean removeFamilyTree(FamilyTreeDTO familyTreeDTO) {
+        try {
+            return familyTreesRepository.deleteFamilyTree(familyTreeDTO.getId());
+        } catch (SQLException e) {
+            logger.error("Error deleting family tree: " + e.getMessage());
+            return false;
+        }
     }
 
     void setFamilyTreesRepository(FamilyTreesRepository familyTreesRepository) {

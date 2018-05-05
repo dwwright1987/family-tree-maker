@@ -9,16 +9,23 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class FamilyTreesRepository {
+    private static final String FAMILY_TREES_TABLE_NAME = "FAMILY_TREES";
     private DbManager dbManager = DbManager.getInstance();
     private FamilyTreesMapper familyTreesMapper = new FamilyTreesMapper();
 
     public void createFamilyTree(String familyName) throws SQLException {
-        String statement = "INSERT INTO FAMILY_TREES (NAME) VALUES ('" + familyName + "')";
+        String statement = "INSERT INTO " + FAMILY_TREES_TABLE_NAME + " (NAME) VALUES ('" + familyName + "')";
         dbManager.update(statement);
     }
 
+    public boolean deleteFamilyTree(int id) throws SQLException {
+        String statement = "DELETE FROM " + FAMILY_TREES_TABLE_NAME + " WHERE ID = " + id;
+        return dbManager.execute(statement);
+    }
+
     public List<FamilyTreeDTO> getAllFamilyTrees() throws SQLException {
-        ResultSet resultSet = dbManager.query("SELECT * FROM FAMILY_TREES");
+        String statement = "SELECT * FROM " + FAMILY_TREES_TABLE_NAME;
+        ResultSet resultSet = dbManager.query(statement);
         return familyTreesMapper.map(resultSet);
     }
 

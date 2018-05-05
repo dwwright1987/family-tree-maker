@@ -59,6 +59,10 @@ public class DbManager {
         }
     }
 
+    public boolean execute(String statement) throws SQLException {
+        return connection.createStatement().execute(statement);
+    }
+
     public void update(String statement) throws SQLException {
         connection.createStatement().executeUpdate(statement);
     }

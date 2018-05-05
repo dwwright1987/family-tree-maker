@@ -15,10 +15,13 @@ import static org.mockito.Mockito.*;
 class FamilyTreesServiceTest {
     private static final String WRIGHT_FAMILY_NAME = "Wright";
     private FamilyTreesService classToTest;
+    private FamilyTreeDTO familyTreeDTO = new FamilyTreeDTO();
     private FamilyTreesRepository mockFamilyTreesRepository = mock(FamilyTreesRepository.class);
 
     @BeforeEach
     void setUp() throws Exception {
+        familyTreeDTO.setId(11);
+
         classToTest = new FamilyTreesService();
         classToTest.setFamilyTreesRepository(mockFamilyTreesRepository);
     }
@@ -38,7 +41,7 @@ class FamilyTreesServiceTest {
     @Test
     void testGetAllFamilyTreesReturnsAllFamilyTrees() throws Exception {
         List<FamilyTreeDTO> expectedFamilyTreeDTOS = new ArrayList<>();
-        expectedFamilyTreeDTOS.add(new FamilyTreeDTO());
+        expectedFamilyTreeDTOS.add(familyTreeDTO);
 
         when(mockFamilyTreesRepository.getAllFamilyTrees()).thenReturn(expectedFamilyTreeDTOS);
 
@@ -52,5 +55,23 @@ class FamilyTreesServiceTest {
         when(mockFamilyTreesRepository.getAllFamilyTrees()).thenThrow(new SQLException());
 
         assertTrue(classToTest.getAllFamilyTrees().isEmpty());
+    }
+
+    @Test
+    void testRemoveFamilyTreeReturnsResultOfDelete() throws Exception {
+        boolean result = true;
+
+        when(mockFamilyTreesRepository.deleteFamilyTree(familyTreeDTO.getId())).thenReturn(result);
+
+        boolean actualResult = classToTest.removeFamilyTree(familyTreeDTO);
+
+        assertEquals(actualResult, result);
+    }
+
+    @Test
+    void testRemoveFamilyTreeReturnsFalseWhenThereIsAnException() throws Exception {
+        when(mockFamilyTreesRepository.deleteFamilyTree(familyTreeDTO.getId())).thenThrow(new SQLException());
+
+        assertFalse(classToTest.removeFamilyTree(familyTreeDTO));
     }
 }

@@ -54,4 +54,17 @@ class FamilyTreesRepositoryTest {
 
         assertEquals(expectedFamilyTreeDTOS, actualFamilyTreesDTOs);
     }
+
+    @Test
+    void testDeleteReturnsResultOfExecutingDeleteForId() throws Exception {
+        int expectedIdToDelete = 1;
+        String expectedDeleteStatement = "DELETE FROM FAMILY_TREES WHERE ID = " + expectedIdToDelete;
+        boolean result = true;
+
+        when(mockDbManager.execute(expectedDeleteStatement)).thenReturn(result);
+
+        boolean actualResult = classToTest.deleteFamilyTree(expectedIdToDelete);
+
+        assertEquals(result, actualResult);
+    }
 }

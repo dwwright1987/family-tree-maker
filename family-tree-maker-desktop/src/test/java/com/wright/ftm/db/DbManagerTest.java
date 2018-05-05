@@ -165,6 +165,20 @@ class DbManagerTest {
         assertEquals(mockResultSet, actualResultSet);
     }
 
+    @Test
+    void testExecuteReturnsResultFromExecute() throws Exception {
+        String expectedExecuteStatement = "DELETE FROM BLAH WHERE ID = 1";
+        boolean result = true;
+
+        when(mockStatement.execute(expectedExecuteStatement)).thenReturn(result);
+
+        classToTest.startDb();
+
+        boolean actualResult = classToTest.execute(expectedExecuteStatement);
+
+        assertEquals(result, actualResult);
+    }
+
     private class DbManagerStub extends DbManager {
         @Override
         DbConfigurationService getDbConfigurationService() {
