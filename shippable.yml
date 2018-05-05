@@ -6,7 +6,7 @@ build:
     - mvn -version
     - mvn clean verify
     - cp -r family-tree-maker-desktop/target/surefire-reports/*.xml shippable/testresults
-    - cp -r family-tree-maker-desktop/target/failsafe-reports/*.xml shippable/testresults
+    - cp -r family-tree-maker-desktop/target/failsafe-reports/TEST*.xml shippable/testresults
     - cp -r family-tree-maker-desktop/target shippable/codecoverage
 integrations:
   notifications:
