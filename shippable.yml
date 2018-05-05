@@ -3,9 +3,6 @@ jdk:
   - oraclejdk8
 build:
   ci:
-    - mkdir -p shippable/testresults
-    - mkdir -p shippable/codecoverage
-
     - mvn -version
     - mvn clean verify
 

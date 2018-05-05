@@ -1,4 +1,4 @@
-package com.wright.ftm.services;
+package integration;
 
 import com.wright.ftm.db.IntegrationDbManager;
 import org.junit.jupiter.api.AfterEach;

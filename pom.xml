@@ -56,6 +56,11 @@
                         <version>5.1.0</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
