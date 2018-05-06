@@ -5,14 +5,14 @@ import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.mappers.FamilyTreesMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class FamilyTreesRepositoryTest {
     private FamilyTreesRepository classToTest;
@@ -27,17 +27,14 @@ class FamilyTreesRepositoryTest {
     }
 
     @Test
-    void testCreateFamilyNameRunsInsertStatementForFamilyNamesTable() throws Exception {
+    void testCreateFamilyNameReturnsIdForInsertIntoFamilyNamesTable() throws Exception {
         String expectedFamilyName = "Wright";
-
-        classToTest.createFamilyTree(expectedFamilyName);
-
-        ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
-
-        verify(mockDbManager).update(stringArgumentCaptor.capture());
-
+        int expectedId = 30;
         String expectedStatement = "INSERT INTO FAMILY_TREES (NAME) VALUES ('" + expectedFamilyName + "')";
-        assertEquals(expectedStatement, stringArgumentCaptor.getValue());
+
+        when(mockDbManager.insert(expectedStatement)).thenReturn(expectedId);
+
+        assertEquals(expectedId, classToTest.createFamilyTree(expectedFamilyName));
     }
 
     @Test

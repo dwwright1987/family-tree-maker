@@ -1,5 +1,6 @@
 package com.wright.ftm.services;
 
+import com.wright.ftm.Constants;
 import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.repositories.FamilyTreesRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class FamilyTreesServiceTest {
     private static final String WRIGHT_FAMILY_NAME = "Wright";
@@ -27,15 +29,29 @@ class FamilyTreesServiceTest {
     }
 
     @Test
-    void testCreateFamilyNameReturnsTrueWhenThereIsNoException() throws Exception {
-        assertTrue(classToTest.createFamilyTree(WRIGHT_FAMILY_NAME));
+    void testCreateFamilyNameReturnsFamilyTreeDTOWhenThereIsNoException() throws Exception {
+        int expectedId = 5;
+
+        when(mockFamilyTreesRepository.createFamilyTree(WRIGHT_FAMILY_NAME)).thenReturn(expectedId);
+
+        FamilyTreeDTO familyTreeDTO = classToTest.createFamilyTree(WRIGHT_FAMILY_NAME);
+
+        assertEquals(expectedId, familyTreeDTO.getId());
+        assertEquals(WRIGHT_FAMILY_NAME, familyTreeDTO.getName());
     }
 
     @Test
-    void testCreateFamilyNameReturnsFalseWhenThereIsAnException() throws Exception {
-        doThrow(new SQLException()).when(mockFamilyTreesRepository).createFamilyTree(WRIGHT_FAMILY_NAME);
+    void testCreateFamilyNameReturnsNullWhenAnInvalidIdIsReturned() throws Exception {
+        when(mockFamilyTreesRepository.createFamilyTree(WRIGHT_FAMILY_NAME)).thenReturn(Constants.INVALID_INSERT_ID);
 
-        assertFalse(classToTest.createFamilyTree(WRIGHT_FAMILY_NAME));
+        assertNull(classToTest.createFamilyTree(WRIGHT_FAMILY_NAME));
+    }
+
+    @Test
+    void testCreateFamilyNameReturnsNullWhenThereIsAnException() throws Exception {
+        when(mockFamilyTreesRepository.createFamilyTree(WRIGHT_FAMILY_NAME)).thenThrow(new SQLException());
+
+        assertNull(classToTest.createFamilyTree(WRIGHT_FAMILY_NAME));
     }
 
     @Test

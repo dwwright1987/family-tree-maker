@@ -7,9 +7,7 @@ import com.wright.ftm.wrappers.DriverManagerWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static com.wright.ftm.Constants.WINDOWS_ROOT_APP_STORAGE_PATH;
 
@@ -61,6 +59,18 @@ public class DbManager {
 
     public boolean execute(String statement) throws SQLException {
         return connection.createStatement().execute(statement);
+    }
+
+    public int insert(String statement) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.executeUpdate();
+
+        ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+        if (generatedKeys.next()) {
+            return generatedKeys.getInt(1);
+        } else {
+            return Constants.INVALID_INSERT_ID;
+        }
     }
 
     public void update(String statement) throws SQLException {

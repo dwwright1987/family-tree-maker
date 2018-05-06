@@ -1,5 +1,6 @@
 package com.wright.ftm.db;
 
+import com.wright.ftm.Constants;
 import com.wright.ftm.services.DbConfigurationService;
 import com.wright.ftm.wrappers.ClassWrapper;
 import com.wright.ftm.wrappers.DriverManagerWrapper;
@@ -8,10 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 import static com.wright.ftm.Constants.WINDOWS_ROOT_APP_STORAGE_PATH;
@@ -25,6 +23,8 @@ class DbManagerTest {
     private Connection mockConnection = mock(Connection.class);
     private DbConfigurationService mockDbConfigurationService = mock(DbConfigurationService.class);
     private DriverManagerWrapper mockDriverMangerWrapper = mock(DriverManagerWrapper.class);
+    private PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+    private ResultSet mockResultSet = mock(ResultSet.class);
     private Statement mockStatement = mock(Statement.class);
 
     @BeforeEach
@@ -177,6 +177,36 @@ class DbManagerTest {
         boolean actualResult = classToTest.execute(expectedExecuteStatement);
 
         assertEquals(result, actualResult);
+    }
+
+    @Test
+    void testInsertReturnsGeneratedIdWhenItExists() throws Exception {
+        int expectedId = 11;
+        String expectedInsertStatement = "INSERT 1 INTO BLAH";
+
+        when(mockConnection.prepareStatement(expectedInsertStatement, Statement.RETURN_GENERATED_KEYS)).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt(1)).thenReturn(expectedId);
+
+        classToTest.startDb();
+
+        assertEquals(expectedId, classToTest.insert(expectedInsertStatement));
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @Test
+    void testInsertReturnsGeneratedNegative1WhenNoKeyIsGenerated() throws Exception {
+        String expectedInsertStatement = "INSERT 1 INTO BLAH";
+
+        when(mockConnection.prepareStatement(expectedInsertStatement, Statement.RETURN_GENERATED_KEYS)).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(false);
+
+        classToTest.startDb();
+
+        assertEquals(Constants.INVALID_INSERT_ID, classToTest.insert(expectedInsertStatement));
+        verify(mockPreparedStatement).executeUpdate();
     }
 
     private class DbManagerStub extends DbManager {

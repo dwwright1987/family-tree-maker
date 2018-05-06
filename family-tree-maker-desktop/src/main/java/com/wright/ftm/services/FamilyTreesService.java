@@ -1,5 +1,6 @@
 package com.wright.ftm.services;
 
+import com.wright.ftm.Constants;
 import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.repositories.FamilyTreesRepository;
 import org.slf4j.Logger;
@@ -9,18 +10,23 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
-public class FamilyTreesService { //TODO: Integration tests
+public class FamilyTreesService {
     private final Logger logger = LoggerFactory.getLogger(FamilyTreesService.class);
     private FamilyTreesRepository familyTreesRepository = new FamilyTreesRepository();
 
-    public boolean createFamilyTree(String familyName) {
+    public FamilyTreeDTO createFamilyTree(String familyName) {
+        FamilyTreeDTO familyTreeDTO = null;
+
         try {
-            familyTreesRepository.createFamilyTree(familyName);
-            return true;
+            int id = familyTreesRepository.createFamilyTree(familyName);
+            if (id != Constants.INVALID_INSERT_ID) {
+                familyTreeDTO = createFamilyTreDTO(id, familyName);
+            }
         } catch (SQLException e) {
             logger.error("Error creating family tree " + familyName + ": " + e.getMessage());
-            return false;
         }
+
+        return familyTreeDTO;
     }
 
     public List<FamilyTreeDTO> getAllFamilyTrees() {
@@ -39,6 +45,14 @@ public class FamilyTreesService { //TODO: Integration tests
             logger.error("Error deleting family tree: " + e.getMessage());
             return false;
         }
+    }
+
+    private FamilyTreeDTO createFamilyTreDTO(int id, String name) {
+        FamilyTreeDTO familyTreeDTO = new FamilyTreeDTO();
+        familyTreeDTO.setId(id);
+        familyTreeDTO.setName(name);
+
+        return familyTreeDTO;
     }
 
     void setFamilyTreesRepository(FamilyTreesRepository familyTreesRepository) {

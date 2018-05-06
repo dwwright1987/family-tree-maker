@@ -131,10 +131,11 @@ public class FamilyTreeBuilderScene {
                     familyTrees.clear();
                 }
 
-                if (familyTreesService.createFamilyTree(familyName)) {
-                    familyTrees.add(createFamilyTree(familyName));
-                } else {
+                FamilyTreeDTO familyTreeDTO = familyTreesService.createFamilyTree(familyName);
+                if (familyTreeDTO == null) {
                     WarningAlert.show("Could not create family tree: " + familyName);
+                } else {
+                    familyTrees.add(familyTreeDTO);
                 }
             }
         });

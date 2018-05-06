@@ -13,9 +13,9 @@ public class FamilyTreesRepository {
     private DbManager dbManager = DbManager.getInstance();
     private FamilyTreesMapper familyTreesMapper = new FamilyTreesMapper();
 
-    public void createFamilyTree(String familyName) throws SQLException {
+    public int createFamilyTree(String familyName) throws SQLException {
         String statement = "INSERT INTO " + FAMILY_TREES_TABLE_NAME + " (NAME) VALUES ('" + familyName + "')";
-        dbManager.update(statement);
+        return dbManager.insert(statement);
     }
 
     public boolean deleteFamilyTree(int id) throws SQLException {

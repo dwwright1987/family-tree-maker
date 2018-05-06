@@ -31,7 +31,9 @@ public class FamilyTreesServiceIntegrationTest {
 
     @Test
     void testWritesAndReadsFamilyTrees() throws Exception {
-        familyTreesService.createFamilyTree(EXPECTED_FAMILY_NAME);
+        FamilyTreeDTO familyTreeDTO = familyTreesService.createFamilyTree(EXPECTED_FAMILY_NAME);
+
+        assertTrue(familyTreeDTO.getId() > 0);
 
         List<FamilyTreeDTO> allFamilyTrees = familyTreesService.getAllFamilyTrees();
 
