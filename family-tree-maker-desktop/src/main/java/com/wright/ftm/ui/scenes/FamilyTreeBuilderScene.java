@@ -93,7 +93,11 @@ public class FamilyTreeBuilderScene {
         familyTreeNamesView.setCellFactory(param -> new ListCell<FamilyTreeDTO>() {
             protected void updateItem(FamilyTreeDTO item, boolean empty) {
                 super.updateItem(item, empty);
-                if (!empty) {
+
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
                     setText(item.getName());
                 }
             }
