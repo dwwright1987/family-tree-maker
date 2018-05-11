@@ -2,6 +2,7 @@ package com.wright.ftm.ui.scenes;
 
 import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.services.FamilyTreesService;
+import com.wright.ftm.ui.alerts.ConfirmationAlert;
 import com.wright.ftm.ui.alerts.WarningAlert;
 import com.wright.ftm.ui.utils.FamilyTreeComparator;
 import com.wright.ftm.ui.utils.GraphicsUtils;
@@ -90,7 +91,13 @@ public class FamilyTreeBuilderScene {
         ListView<FamilyTreeDTO> familyTreeNamesView = new ListView<>();
         familyTreeNamesView.setEditable(false);
         familyTreeNamesView.setItems(familyTrees.sorted(new FamilyTreeComparator()));
-        familyTreeNamesView.setCellFactory(param -> new ListCell<FamilyTreeDTO>() {
+        familyTreeNamesView.setCellFactory(param -> createFamilyTreeNamesListCell());
+
+        return familyTreeNamesView;
+    }
+
+    private static ListCell<FamilyTreeDTO> createFamilyTreeNamesListCell() {
+        ListCell<FamilyTreeDTO> cell = new ListCell<FamilyTreeDTO>() {
             protected void updateItem(FamilyTreeDTO item, boolean empty) {
                 super.updateItem(item, empty);
 
@@ -101,9 +108,37 @@ public class FamilyTreeBuilderScene {
                     setText(item.getName());
                 }
             }
+        };
+
+        cell.setContextMenu(createFamilyTreeNamesListCellContextMenu(cell));
+
+        return cell;
+    }
+
+    private static ContextMenu createFamilyTreeNamesListCellContextMenu(ListCell<FamilyTreeDTO> cell) {
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().add(createFamilyTreeNamesListCellDeleteContextMenuItem(cell));
+
+        return  contextMenu;
+    }
+
+    private static MenuItem createFamilyTreeNamesListCellDeleteContextMenuItem(ListCell<FamilyTreeDTO> cell) {
+        MenuItem menuItem = new MenuItem("Delete");
+        menuItem.setOnAction(event -> {
+            FamilyTreeDTO familyTreeDTO = cell.getItem();
+
+            ConfirmationAlert.show("Are you sure you want to remove the " + familyTreeDTO.getName() + " family and all associated members?", buttonType -> {
+                if (buttonType == ButtonType.OK) {
+                    if (familyTreesService.removeFamilyTree(familyTreeDTO)) {
+                        familyTrees.remove(familyTreeDTO);
+                    } else {
+                        WarningAlert.show("Could not remove family tree: " + familyTreeDTO.getName());
+                    }
+                }
+            });
         });
 
-        return familyTreeNamesView;
+        return menuItem;
     }
 
     private static Button createCreateFamilyTreeButton() {

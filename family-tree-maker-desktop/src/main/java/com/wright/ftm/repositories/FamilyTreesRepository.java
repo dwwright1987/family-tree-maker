@@ -20,7 +20,7 @@ public class FamilyTreesRepository {
 
     public boolean deleteFamilyTree(int id) throws SQLException {
         String statement = "DELETE FROM " + FAMILY_TREES_TABLE_NAME + " WHERE ID = " + id;
-        return dbManager.execute(statement);
+        return !dbManager.execute(statement);
     }
 
     public List<FamilyTreeDTO> getAllFamilyTrees() throws SQLException {

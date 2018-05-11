@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -53,15 +54,13 @@ class FamilyTreesRepositoryTest {
     }
 
     @Test
-    void testDeleteReturnsResultOfExecutingDeleteForId() throws Exception {
+    void testDeleteReturnsTrueWhenResultIsFalse() throws Exception {
         int expectedIdToDelete = 1;
         String expectedDeleteStatement = "DELETE FROM FAMILY_TREES WHERE ID = " + expectedIdToDelete;
         boolean result = true;
 
-        when(mockDbManager.execute(expectedDeleteStatement)).thenReturn(result);
+        when(mockDbManager.execute(expectedDeleteStatement)).thenReturn(false);
 
-        boolean actualResult = classToTest.deleteFamilyTree(expectedIdToDelete);
-
-        assertEquals(result, actualResult);
+        assertTrue(classToTest.deleteFamilyTree(expectedIdToDelete));
     }
 }
