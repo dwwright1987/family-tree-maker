@@ -4,6 +4,7 @@ import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.services.FamilyTreesService;
 import com.wright.ftm.ui.alerts.ConfirmationAlert;
 import com.wright.ftm.ui.alerts.WarningAlert;
+import com.wright.ftm.ui.nodes.FamilyTreeMakerMenuBar;
 import com.wright.ftm.ui.utils.FamilyTreeComparator;
 import com.wright.ftm.ui.utils.GraphicsUtils;
 import com.wright.ftm.ui.utils.UiLocationUtils;
@@ -33,35 +34,10 @@ public class FamilyTreeBuilderScene {
 
     private static BorderPane createBorderPane(Stage primaryStage) {
         BorderPane borderPane = new BorderPane();
-        borderPane.setTop(createMenuBar(primaryStage));
+        borderPane.setTop(FamilyTreeMakerMenuBar.build(primaryStage));
         borderPane.setLeft(createFamiliesPane());
 
         return borderPane;
-    }
-
-    private static MenuBar createMenuBar(Stage primaryStage) {
-        MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(createFileMenu(primaryStage));
-
-        return menuBar;
-    }
-
-    private static Menu createFileMenu(Stage primaryStage) {
-        Menu menu = new Menu("File");
-        menu.getItems().addAll(createExportMenuItem(), new SeparatorMenuItem(), createExitMenuItem(primaryStage));
-
-        return menu;
-    }
-
-    private static MenuItem createExportMenuItem() {
-        return new MenuItem("Export");
-    }
-
-    private static MenuItem createExitMenuItem(Stage primaryStage) {
-        MenuItem menuItem = new MenuItem("Exit");
-        menuItem.setOnAction(event -> primaryStage.close());
-
-        return menuItem;
     }
 
     private static VBox createFamiliesPane() {
