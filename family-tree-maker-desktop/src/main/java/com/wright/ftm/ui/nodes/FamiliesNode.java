@@ -21,28 +21,24 @@ import java.util.List;
 
 import static com.wright.ftm.Constants.DEFAULT_PADDING;
 
-public class FamiliesVBox {
+public class FamiliesNode {
     private static final String NO_FAMILIES_EXIST = "No Families Exist.";
     private static final ObservableList<FamilyTreeDTO> familyTrees = FXCollections.observableArrayList();
     private static final FamilyTreesService familyTreesService = new FamilyTreesService();
 
     public static VBox build() {
-        ListView<FamilyTreeDTO> familyTreesView = createFamilyTreesView();
-
         VBox familiesBox = new VBox();
         familiesBox.setBorder(new Border(new BorderStroke(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.NONE , BorderStrokeStyle.NONE, CornerRadii.EMPTY, BorderWidths.DEFAULT, Insets.EMPTY)));
         familiesBox.setMinWidth(250);
         familiesBox.setAlignment(Pos.CENTER);
         familiesBox.setPadding(new Insets(DEFAULT_PADDING));
         familiesBox.setSpacing(DEFAULT_PADDING);
-        familiesBox.getChildren().addAll(familyTreesView, createCreateFamilyTreeButton());
-
-        familyTreesView.prefHeightProperty().bind(familiesBox.heightProperty());
+        familiesBox.getChildren().addAll(createFamilyTreesView(familiesBox), createCreateFamilyTreeButton());
 
         return familiesBox;
     }
 
-    private static ListView<FamilyTreeDTO> createFamilyTreesView() {
+    private static ListView<FamilyTreeDTO> createFamilyTreesView(Pane parent) {
         List<FamilyTreeDTO> allFamilyTrees = familyTreesService.getAllFamilyTrees();
         if (allFamilyTrees.isEmpty()) {
             familyTrees.add(createFamilyTree(NO_FAMILIES_EXIST));
@@ -54,6 +50,7 @@ public class FamiliesVBox {
         familyTreeNamesView.setEditable(false);
         familyTreeNamesView.setItems(familyTrees.sorted(new FamilyTreeComparator()));
         familyTreeNamesView.setCellFactory(param -> createFamilyTreeNamesListCell());
+        familyTreeNamesView.prefHeightProperty().bind(parent.heightProperty());
 
         return familyTreeNamesView;
     }

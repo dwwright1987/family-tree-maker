@@ -7,7 +7,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.stage.Stage;
 
-public class FamilyTreeMakerMenuBar {
+public class FamilyTreeMakerMenuBarNode {
     public static Node build(Stage primaryStage) {
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(createFileMenu(primaryStage));
