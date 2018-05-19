@@ -18,10 +18,12 @@ public class FamilyTreesService {
         FamilyTreeDTO familyTreeDTO = null;
 
         try {
+            logger.info("Creating family tree: " + familyName + "...");
             int id = familyTreesRepository.createFamilyTree(familyName);
             if (id != Constants.INVALID_INSERT_ID) {
                 familyTreeDTO = createFamilyTreDTO(id, familyName);
             }
+            logger.info("Family tree created");
         } catch (SQLException e) {
             logger.error("Error creating family tree " + familyName + ": " + e.getMessage());
         }
@@ -31,7 +33,10 @@ public class FamilyTreesService {
 
     public List<FamilyTreeDTO> getAllFamilyTrees() {
         try {
-            return familyTreesRepository.getAllFamilyTrees();
+            logger.info("Getting all family trees...");
+            List<FamilyTreeDTO> familyTreeDTOs = familyTreesRepository.getAllFamilyTrees();
+            logger.info("Found " + familyTreeDTOs.size() + " family trees");
+            return familyTreeDTOs;
         } catch (SQLException e) {
             logger.error("Error getting family trees: " + e.getMessage());
             return Collections.emptyList();
@@ -40,7 +45,10 @@ public class FamilyTreesService {
 
     public boolean removeFamilyTree(FamilyTreeDTO familyTreeDTO) {
         try {
-            return familyTreesRepository.deleteFamilyTree(familyTreeDTO.getId());
+            logger.info("Deleting " + familyTreeDTO.getName() + " family tree...");
+            boolean deleteResult = familyTreesRepository.deleteFamilyTree(familyTreeDTO.getId());
+            logger.info("Family tree deleted");
+            return deleteResult;
         } catch (SQLException e) {
             logger.error("Error deleting family tree: " + e.getMessage());
             return false;
