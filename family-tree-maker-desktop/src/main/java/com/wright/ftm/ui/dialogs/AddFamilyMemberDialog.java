@@ -1,6 +1,6 @@
 package com.wright.ftm.ui.dialogs;
 
-import com.wright.ftm.dtos.FamilyMemberDTO;
+import com.wright.ftm.dtos.FamilyTreeMemberDTO;
 import com.wright.ftm.dtos.Sex;
 import com.wright.ftm.ui.utils.GraphicsUtils;
 import com.wright.ftm.ui.utils.UiLocationUtils;
@@ -15,7 +15,7 @@ import static com.wright.ftm.Constants.DEFAULT_PADDING;
 import static com.wright.ftm.dtos.Sex.FEMALE;
 import static com.wright.ftm.dtos.Sex.MALE;
 
-public class AddFamilyMemberDialog extends Dialog<FamilyMemberDTO> {
+public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
     private static final String FEMALE_SEX_OPTION = "Female";
     private static final String MALE_SEX_OPTION = "Male";
     private ComboBox sexOptions = new ComboBox(FXCollections.observableArrayList(FEMALE_SEX_OPTION, MALE_SEX_OPTION));
@@ -63,12 +63,12 @@ public class AddFamilyMemberDialog extends Dialog<FamilyMemberDTO> {
         return label;
     }
 
-    private FamilyMemberDTO handleClose(ButtonType response) {
+    private FamilyTreeMemberDTO handleClose(ButtonType response) {
         if (response == ButtonType.OK) {
-            FamilyMemberDTO familyMemberDTO = new FamilyMemberDTO();
-            familyMemberDTO.setSex(determineSex());
+            FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
+            familyTreeMemberDTO.setSex(determineSex());
 
-            return familyMemberDTO;
+            return familyTreeMemberDTO;
         } else {
             return null;
         }

@@ -1,8 +1,8 @@
 package integration;
 
-import com.wright.ftm.dtos.FamilyMemberDTO;
 import com.wright.ftm.dtos.FamilyTreeDTO;
-import com.wright.ftm.services.FamilyMembersTreeService;
+import com.wright.ftm.dtos.FamilyTreeMemberDTO;
+import com.wright.ftm.services.FamilyTreeMembersService;
 import com.wright.ftm.services.FamilyTreesService;
 import integration.db.IntegrationDbManager;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FamilyTreeMembersServiceIntegrationTest {
-    private FamilyMembersTreeService familyMembersTreeService = new FamilyMembersTreeService();
+    private FamilyTreeMembersService familyTreeMembersService = new FamilyTreeMembersService();
     private FamilyTreeDTO familyTreeDTO;
     private IntegrationDbManager integrationDbManager = new IntegrationDbManager();
 
@@ -36,33 +36,31 @@ public class FamilyTreeMembersServiceIntegrationTest {
 
     @Test
     void testCanCreateCurrentlyLivingMaleFamilyMember() throws Exception {
-        FamilyMemberDTO expectedFamilyMemberDTO = new FamilyMemberDTO();
-        expectedFamilyMemberDTO.setFamilyTree(familyTreeDTO);
-        expectedFamilyMemberDTO.setSex(MALE);
+        FamilyTreeMemberDTO expectedFamilyTreeMemberDTO = new FamilyTreeMemberDTO();
+        expectedFamilyTreeMemberDTO.setSex(MALE);
 
-        int familyMemberId = familyMembersTreeService.createFamilyMember(expectedFamilyMemberDTO);
-        assertTrue(familyMemberId > 0);
+        FamilyTreeMemberDTO actualFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(expectedFamilyTreeMemberDTO, familyTreeDTO);
+        assertTrue(actualFamilyTreeMemberDTO.getId() > 0);
 
-        List<FamilyMemberDTO> familyMemberDTOs = familyMembersTreeService.getFamilyMembers(familyTreeDTO);
-        assertEquals(1, familyMemberDTOs.size());
+        List<FamilyTreeMemberDTO> familyTreeMemberDTOs = familyTreeMembersService.getFamilyMembers(familyTreeDTO);
+        assertEquals(1, familyTreeMemberDTOs.size());
 
-        FamilyMemberDTO actualFamilyMemberDTO = familyMemberDTOs.get(0);
-        assertEquals(expectedFamilyMemberDTO.getSex(), actualFamilyMemberDTO.getSex());
+        actualFamilyTreeMemberDTO = familyTreeMemberDTOs.get(0);
+        assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
     }
 
     @Test
     void testCanCreateCurrentlyLivingFemaleFamilyMember() throws Exception {
-        FamilyMemberDTO expectedFamilyMemberDTO = new FamilyMemberDTO();
-        expectedFamilyMemberDTO.setFamilyTree(familyTreeDTO);
-        expectedFamilyMemberDTO.setSex(FEMALE);
+        FamilyTreeMemberDTO expectedFamilyTreeMemberDTO = new FamilyTreeMemberDTO();
+        expectedFamilyTreeMemberDTO.setSex(FEMALE);
 
-        int familyMemberId = familyMembersTreeService.createFamilyMember(expectedFamilyMemberDTO);
-        assertTrue(familyMemberId > 0);
+        FamilyTreeMemberDTO actualFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(expectedFamilyTreeMemberDTO, familyTreeDTO);
+        assertTrue(actualFamilyTreeMemberDTO.getId() > 0);
 
-        List<FamilyMemberDTO> familyMemberDTOs = familyMembersTreeService.getFamilyMembers(familyTreeDTO);
-        assertEquals(1, familyMemberDTOs.size());
+        List<FamilyTreeMemberDTO> familyTreeMemberDTOs = familyTreeMembersService.getFamilyMembers(familyTreeDTO);
+        assertEquals(1, familyTreeMemberDTOs.size());
 
-        FamilyMemberDTO actualFamilyMemberDTO = familyMemberDTOs.get(0);
-        assertEquals(expectedFamilyMemberDTO.getSex(), actualFamilyMemberDTO.getSex());
+        actualFamilyTreeMemberDTO = familyTreeMemberDTOs.get(0);
+        assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
     }
 }

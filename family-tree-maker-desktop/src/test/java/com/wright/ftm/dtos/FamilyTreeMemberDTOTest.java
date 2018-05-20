@@ -5,15 +5,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FamilyMemberDTOTest {
-    private FamilyMemberDTO classToTest;
+class FamilyTreeMemberDTOTest {
+    private FamilyTreeMemberDTO classToTest;
     private FamilyTreeDTO familyTreeDTO = new FamilyTreeDTO();
 
     @BeforeEach
     void setUp() throws Exception {
         familyTreeDTO.setId(26);
 
-        classToTest = new FamilyMemberDTO();
+        classToTest = new FamilyTreeMemberDTO();
     }
 
     @Test
