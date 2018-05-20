@@ -1,6 +1,5 @@
 package integration;
 
-import com.wright.ftm.db.DbManager;
 import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.services.FamilyTreesService;
 import integration.db.IntegrationDbManager;
@@ -15,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FamilyTreesServiceIntegrationTest {
     private static final String EXPECTED_FAMILY_NAME = "Wright";
-    private DbManager dbManager = DbManager.getInstance();
     private FamilyTreesService familyTreesService = new FamilyTreesService();
     private IntegrationDbManager integrationDbManager = new IntegrationDbManager();
 
