@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 class FamilyTreesRepositoryTest {
     private FamilyTreesRepository classToTest;
-    private final DbManager mockDbManager = mock(DbManager.class);
+    private DbManager mockDbManager = mock(DbManager.class);
     private FamilyTreesMapper mockFamilyTreesMapper = mock(FamilyTreesMapper.class);
 
     @BeforeEach
