@@ -59,9 +59,7 @@ class FamilyTreesMapperTest {
         when(mockResultSet.next()).thenThrow(new SQLException());
 
         try {
-            List<FamilyTreeDTO> familyTreeDTOs = classToTest.map(mockResultSet);
-
-            assertTrue(familyTreeDTOs.isEmpty());
+            assertTrue(classToTest.map(mockResultSet).isEmpty());
         } catch (Exception e) {
             fail("Should not throw exception");
         }

@@ -7,14 +7,13 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class FamilyTreesMapper {
     private final Logger logger = LoggerFactory.getLogger(FamilyTreesMapper.class);
 
     public List<FamilyTreeDTO> map(ResultSet resultSet) {
-        ArrayList<FamilyTreeDTO> familyTreeDTOs = new ArrayList<>();
+        List<FamilyTreeDTO> familyTreeDTOs = new ArrayList<>();
 
         try {
             while (resultSet.next()) {
@@ -26,7 +25,6 @@ public class FamilyTreesMapper {
             }
         } catch (SQLException e) {
             logger.error("Error mapping family trees: " + e.getMessage());
-            return Collections.emptyList();
         }
 
         return familyTreeDTOs;

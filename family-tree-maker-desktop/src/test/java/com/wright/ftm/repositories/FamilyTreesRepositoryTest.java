@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,24 +40,20 @@ class FamilyTreesRepositoryTest {
 
     @Test
     void testGetAllFamilyTreesReturnFamilyTreesMappedFromQuery() throws Exception {
-        List<FamilyTreeDTO> expectedFamilyTreeDTOS = new ArrayList<>();
-        expectedFamilyTreeDTOS.add(new FamilyTreeDTO());
+        List<FamilyTreeDTO> expectedFamilyTreeDTOs = Collections.singletonList(new FamilyTreeDTO());
 
         ResultSet mockResultSet = mock(ResultSet.class);
 
         when(mockDbManager.query("SELECT * FROM FAMILY_TREES")).thenReturn(mockResultSet);
-        when(mockFamilyTreesMapper.map(mockResultSet)).thenReturn(expectedFamilyTreeDTOS);
+        when(mockFamilyTreesMapper.map(mockResultSet)).thenReturn(expectedFamilyTreeDTOs);
 
-        List<FamilyTreeDTO> actualFamilyTreesDTOs = classToTest.getAllFamilyTrees();
-
-        assertEquals(expectedFamilyTreeDTOS, actualFamilyTreesDTOs);
+        assertEquals(expectedFamilyTreeDTOs, classToTest.getAllFamilyTrees());
     }
 
     @Test
     void testDeleteReturnsTrueWhenResultIsFalse() throws Exception {
         int expectedIdToDelete = 1;
         String expectedDeleteStatement = "DELETE FROM FAMILY_TREES WHERE ID = " + expectedIdToDelete;
-        boolean result = true;
 
         when(mockDbManager.execute(expectedDeleteStatement)).thenReturn(false);
 
