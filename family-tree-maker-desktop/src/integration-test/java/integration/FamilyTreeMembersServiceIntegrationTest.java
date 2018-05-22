@@ -38,6 +38,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
     void testCanCreateCurrentlyLivingMaleFamilyMember() throws Exception {
         FamilyTreeMemberDTO expectedFamilyTreeMemberDTO = new FamilyTreeMemberDTO();
         expectedFamilyTreeMemberDTO.setSex(MALE);
+        expectedFamilyTreeMemberDTO.setFirstName("Daniel");
 
         FamilyTreeMemberDTO actualFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(expectedFamilyTreeMemberDTO, familyTreeDTO);
         assertTrue(actualFamilyTreeMemberDTO.getId() > 0);
@@ -46,14 +47,16 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(1, familyTreeMemberDTOs.size());
 
         actualFamilyTreeMemberDTO = familyTreeMemberDTOs.get(0);
-        assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
         assertEquals(familyTreeDTO.getName(), actualFamilyTreeMemberDTO.getFamilyTree().getName());
+        assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
+        assertEquals(expectedFamilyTreeMemberDTO.getFirstName(), actualFamilyTreeMemberDTO.getFirstName());
     }
 
     @Test
     void testCanCreateCurrentlyLivingFemaleFamilyMember() throws Exception {
         FamilyTreeMemberDTO expectedFamilyTreeMemberDTO = new FamilyTreeMemberDTO();
         expectedFamilyTreeMemberDTO.setSex(FEMALE);
+        expectedFamilyTreeMemberDTO.setFirstName("Laura");
 
         FamilyTreeMemberDTO actualFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(expectedFamilyTreeMemberDTO, familyTreeDTO);
         assertTrue(actualFamilyTreeMemberDTO.getId() > 0);
@@ -62,7 +65,8 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(1, familyTreeMemberDTOs.size());
 
         actualFamilyTreeMemberDTO = familyTreeMemberDTOs.get(0);
-        assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
         assertEquals(familyTreeDTO.getName(), actualFamilyTreeMemberDTO.getFamilyTree().getName());
+        assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
+        assertEquals(expectedFamilyTreeMemberDTO.getFirstName(), actualFamilyTreeMemberDTO.getFirstName());
     }
 }

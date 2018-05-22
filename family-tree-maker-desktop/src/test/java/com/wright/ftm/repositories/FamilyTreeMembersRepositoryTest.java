@@ -32,11 +32,13 @@ class FamilyTreeMembersRepositoryTest {
         FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
         familyTreeMemberDTO.setFamilyTreeId(29);
         familyTreeMemberDTO.setSex(MALE);
+        familyTreeMemberDTO.setFirstName("Daniel");
 
         int expectedId = 30;
-        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX) VALUES (" +
+        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME) VALUES (" +
             familyTreeMemberDTO.getFamilyTreeId() + ", " +
-            familyTreeMemberDTO.getSex().ordinal() +
+            familyTreeMemberDTO.getSex().ordinal() + ", " +
+            "'" + familyTreeMemberDTO.getFirstName() + "'" +
         ")";
 
         when(mockDbManager.insert(expectedStatement)).thenReturn(expectedId);

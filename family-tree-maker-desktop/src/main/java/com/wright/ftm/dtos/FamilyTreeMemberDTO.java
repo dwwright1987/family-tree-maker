@@ -3,6 +3,7 @@ package com.wright.ftm.dtos;
 public class FamilyTreeMemberDTO {
     private FamilyTreeDTO familyTree;
     private int familyTreeId;
+    private String firstName;
     private int id;
     private Sex sex;
 
@@ -25,6 +26,14 @@ public class FamilyTreeMemberDTO {
 
     public void setFamilyTreeId(int familyTreeId) {
         this.familyTreeId = familyTreeId;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getFirstName() {
+        return firstName;
     }
 
     public int getId() {

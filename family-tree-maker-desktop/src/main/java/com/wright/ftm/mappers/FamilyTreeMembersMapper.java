@@ -22,6 +22,7 @@ public class FamilyTreeMembersMapper {
                 familyTreeMemberDTO.setId(resultSet.getInt("ID"));
                 familyTreeMemberDTO.setFamilyTreeId(resultSet.getInt("FAMILY_TREE_ID"));
                 familyTreeMemberDTO.setSex(Sex.values()[resultSet.getInt("SEX")]);
+                familyTreeMemberDTO.setFirstName(resultSet.getString("FIRST_NAME"));
 
                 familyTreeMemberDTOs.add(familyTreeMemberDTO);
             }
