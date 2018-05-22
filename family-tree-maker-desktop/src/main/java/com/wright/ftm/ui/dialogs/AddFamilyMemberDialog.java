@@ -7,9 +7,11 @@ import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import org.apache.commons.lang.StringUtils;
 
 import static com.wright.ftm.Constants.DEFAULT_PADDING;
 import static com.wright.ftm.dtos.Sex.FEMALE;
@@ -23,7 +25,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
     private double width = 300;
 
     public AddFamilyMemberDialog() {
-        setHeight(200);
+        setHeight(130);
         setWidth(width);
         setTitle("Add Family Member");
         setDialogPane(buildPane());
@@ -32,6 +34,8 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
         GraphicsUtils.addAppIcon(stage);
         UiLocationUtils.center(stage);
+
+        setOkButtonDisabled(true);
     }
 
     private DialogPane buildPane() {
@@ -45,7 +49,6 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         dialogPane.setPrefHeight(getHeight());
         dialogPane.getChildren().add(inputs);
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        dialogPane.lookupButton(ButtonType.OK).setDisable(true);
 
         return dialogPane;
     }
@@ -95,6 +98,34 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
     }
 
     private TextField createRequiredTextField() {
-        return new TextField();
+        TextField textField = new TextField();
+        textField.setBorder(createTextFieldBorder(Color.RED));
+        textField.setOnKeyReleased(event -> {
+            if (StringUtils.isEmpty(textField.getText())) {
+                textField.setBorder(createTextFieldBorder(Color.RED));
+            } else {
+                textField.setBorder(createTextFieldBorder(Color.DIMGRAY));
+            }
+
+            updateOkButtonState();
+        });
+
+        return textField;
+    }
+
+    private Border createTextFieldBorder(Paint color) {
+        return new Border(new BorderStroke(color, color, color, color, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID , BorderStrokeStyle.SOLID, new CornerRadii(2), BorderWidths.DEFAULT, Insets.EMPTY));
+    }
+
+    private void updateOkButtonState() {
+        if (StringUtils.isNotEmpty(firstNameTextField.getText())) {
+            setOkButtonDisabled(false);
+        } else {
+            setOkButtonDisabled(true);
+        }
+    }
+
+    private void setOkButtonDisabled(boolean disabled) {
+        getDialogPane().lookupButton(ButtonType.OK).setDisable(disabled);
     }
 }
