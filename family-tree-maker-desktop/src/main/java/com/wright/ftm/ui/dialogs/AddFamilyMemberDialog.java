@@ -18,11 +18,12 @@ import static com.wright.ftm.dtos.Sex.MALE;
 public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
     private static final String FEMALE_SEX_OPTION = "Female";
     private static final String MALE_SEX_OPTION = "Male";
+    private TextField firstNameTextField = createRequiredTextField();
     private ComboBox sexOptions = new ComboBox(FXCollections.observableArrayList(FEMALE_SEX_OPTION, MALE_SEX_OPTION));
     private double width = 300;
 
     public AddFamilyMemberDialog() {
-        setHeight(100);
+        setHeight(200);
         setWidth(width);
         setTitle("Add Family Member");
         setDialogPane(buildPane());
@@ -35,9 +36,13 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
 
     private DialogPane buildPane() {
         VBox inputs = new VBox();
-        inputs.getChildren().addAll(createSexInput());
+        inputs.getChildren().addAll(
+            createSexInput(),
+            createFirstNameInput()
+        );
 
         DialogPane dialogPane = new DialogPane();
+        dialogPane.setPrefHeight(getHeight());
         dialogPane.getChildren().add(inputs);
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         dialogPane.lookupButton(ButtonType.OK).setDisable(true);
@@ -47,13 +52,20 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
 
     private HBox createSexInput() {
         sexOptions.getSelectionModel().selectFirst();
+        return createInput("Sex:", sexOptions);
+    }
 
-        HBox sexInput = new HBox();
-        sexInput.setMinWidth(width);
-        sexInput.setPadding(new Insets(DEFAULT_PADDING));
-        sexInput.getChildren().addAll(createLabel("Sex:"), sexOptions);
+    private HBox createFirstNameInput() {
+        return createInput("First Name:", firstNameTextField);
+    }
 
-        return sexInput;
+    private HBox createInput(String labelText, Control control) {
+        HBox input = new HBox();
+        input.setMinWidth(width);
+        input.setPadding(new Insets(DEFAULT_PADDING));
+        input.getChildren().addAll(createLabel(labelText), control);
+
+        return input;
     }
 
     private Label createLabel(String text) {
@@ -80,5 +92,9 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         } else {
             return MALE;
         }
+    }
+
+    private TextField createRequiredTextField() {
+        return new TextField();
     }
 }
