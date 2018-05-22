@@ -8,15 +8,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class FamilyTreeBuilderScene {
-    public static Scene build(Stage primaryStage) {
+    private FamilyTreeNode familyTreeNode = new FamilyTreeNode();
+    private FamiliesNode familiesNode = new FamiliesNode(familyTreeNode);
+
+    public Scene build(Stage primaryStage) {
         return new Scene(createBorderPane(primaryStage));
     }
 
-    private static BorderPane createBorderPane(Stage primaryStage) {
+    private BorderPane createBorderPane(Stage primaryStage) {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(FamilyTreeMakerMenuBarNode.build(primaryStage));
-        borderPane.setLeft(FamiliesNode.build());
-        borderPane.setCenter(FamilyTreeNode.build());
+        borderPane.setLeft(familiesNode.build());
+        borderPane.setCenter(familyTreeNode.build());
 
         return borderPane;
     }

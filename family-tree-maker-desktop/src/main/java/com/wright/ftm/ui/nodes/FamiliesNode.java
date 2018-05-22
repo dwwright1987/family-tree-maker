@@ -23,10 +23,15 @@ import static com.wright.ftm.Constants.DEFAULT_PADDING;
 
 public class FamiliesNode {
     private static final String NO_FAMILIES_EXIST = "No Families Exist.";
-    private static final ObservableList<FamilyTreeDTO> familyTrees = FXCollections.observableArrayList();
-    private static final FamilyTreesService familyTreesService = new FamilyTreesService();
+    private ObservableList<FamilyTreeDTO> familyTrees = FXCollections.observableArrayList();
+    private FamilyTreeNode familyTreeNode;
+    private FamilyTreesService familyTreesService = new FamilyTreesService();
 
-    public static VBox build() {
+    public FamiliesNode(FamilyTreeNode familyTreeNode) {
+        this.familyTreeNode = familyTreeNode;
+    }
+
+    public VBox build() {
         VBox familiesBox = new VBox();
         familiesBox.setBorder(new Border(new BorderStroke(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.NONE , BorderStrokeStyle.NONE, CornerRadii.EMPTY, BorderWidths.DEFAULT, Insets.EMPTY)));
         familiesBox.setMinWidth(250);
@@ -38,7 +43,7 @@ public class FamiliesNode {
         return familiesBox;
     }
 
-    private static ListView<FamilyTreeDTO> createFamilyTreesView(Pane parent) {
+    private ListView<FamilyTreeDTO> createFamilyTreesView(Pane parent) {
         List<FamilyTreeDTO> allFamilyTrees = familyTreesService.getAllFamilyTrees();
         if (allFamilyTrees.isEmpty()) {
             familyTrees.add(createFamilyTree(NO_FAMILIES_EXIST));
@@ -55,14 +60,14 @@ public class FamiliesNode {
         return familyTreeNamesView;
     }
 
-    private static FamilyTreeDTO createFamilyTree(String name) {
+    private FamilyTreeDTO createFamilyTree(String name) {
         FamilyTreeDTO familyTreeDTO = new FamilyTreeDTO();
         familyTreeDTO.setName(name);
 
         return familyTreeDTO;
     }
 
-    private static ListCell<FamilyTreeDTO> createFamilyTreeNamesListCell() {
+    private ListCell<FamilyTreeDTO> createFamilyTreeNamesListCell() {
         ListCell<FamilyTreeDTO> cell = new ListCell<FamilyTreeDTO>() {
             protected void updateItem(FamilyTreeDTO item, boolean empty) {
                 super.updateItem(item, empty);
@@ -74,6 +79,14 @@ public class FamiliesNode {
                     setText(item.getName());
                 }
             }
+
+            public void updateSelected(boolean selected) {
+                super.updateSelected(selected);
+
+                if (selected) {
+                    familyTreeNode.setSelectedFamilyTreeDTO(getItem());
+                }
+            }
         };
 
         cell.setContextMenu(createFamilyTreeNamesListCellContextMenu(cell));
@@ -81,14 +94,14 @@ public class FamiliesNode {
         return cell;
     }
 
-    private static ContextMenu createFamilyTreeNamesListCellContextMenu(ListCell<FamilyTreeDTO> cell) {
+    private ContextMenu createFamilyTreeNamesListCellContextMenu(ListCell<FamilyTreeDTO> cell) {
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().add(createFamilyTreeNamesListCellDeleteContextMenuItem(cell));
 
         return  contextMenu;
     }
 
-    private static MenuItem createFamilyTreeNamesListCellDeleteContextMenuItem(ListCell<FamilyTreeDTO> cell) {
+    private MenuItem createFamilyTreeNamesListCellDeleteContextMenuItem(ListCell<FamilyTreeDTO> cell) {
         MenuItem menuItem = new MenuItem("Delete");
         menuItem.setOnAction(event -> {
             FamilyTreeDTO familyTreeDTO = cell.getItem();
@@ -107,14 +120,14 @@ public class FamiliesNode {
         return menuItem;
     }
 
-    private static Button createCreateFamilyTreeButton() {
+    private Button createCreateFamilyTreeButton() {
         Button createFamilyTreeButton = new Button("Create Family Tree");
         createFamilyTreeButton.setOnMouseClicked(event -> createFamilyNameDialog());
 
         return createFamilyTreeButton;
     }
 
-    private static void createFamilyNameDialog() {
+    private void createFamilyNameDialog() {
         TextInputDialog familyNameDialog = new TextInputDialog();
         familyNameDialog.setHeight(100);
         familyNameDialog.setWidth(300);

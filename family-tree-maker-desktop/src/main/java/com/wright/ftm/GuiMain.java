@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 public class GuiMain extends Application {
     private static Logger logger;
     private DbManager dbManager = DbManager.getInstance();
+    private FamilyTreeBuilderScene familyTreeBuilderScene = new FamilyTreeBuilderScene();
 
     public static void main(String[] args) {
         LoggerConfigurationService loggerConfigurationService = new LoggerConfigurationService();
@@ -33,7 +34,7 @@ public class GuiMain extends Application {
         primaryStage.setHeight(700);
         primaryStage.setWidth(1300);
         primaryStage.setTitle("Family Tree Maker");
-        primaryStage.setScene(FamilyTreeBuilderScene.build(primaryStage));
+        primaryStage.setScene(familyTreeBuilderScene.build(primaryStage));
 
         GraphicsUtils.addAppIcon(primaryStage);
         UiLocationUtils.center(primaryStage);
