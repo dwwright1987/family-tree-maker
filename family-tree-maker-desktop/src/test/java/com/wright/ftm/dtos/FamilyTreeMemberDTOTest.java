@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class FamilyTreeMemberDTOTest {
     private FamilyTreeMemberDTO classToTest;
@@ -21,5 +22,12 @@ class FamilyTreeMemberDTOTest {
         classToTest.setFamilyTree(familyTreeDTO);
 
         assertEquals(familyTreeDTO.getId(), classToTest.getFamilyTreeId());
+    }
+
+    @Test
+    void testHandlesSettingNullFamilyTree() throws Exception {
+        classToTest.setFamilyTree(null);
+        assertNull(classToTest.getFamilyTree());
+        assertEquals(0, classToTest.getFamilyTreeId());
     }
 }

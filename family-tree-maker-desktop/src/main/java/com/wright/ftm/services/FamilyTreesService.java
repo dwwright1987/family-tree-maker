@@ -43,6 +43,18 @@ public class FamilyTreesService {
         }
     }
 
+    public FamilyTreeDTO getFamilyTree(int id) {
+        try {
+            logger.info("Getting family tree with id: " + id + "...");
+            FamilyTreeDTO familyTreeDTO = familyTreesRepository.getFamilyTree(id);
+            logger.info("Found family tree");
+            return familyTreeDTO;
+        } catch (SQLException e) {
+            logger.error("Error getting family tree: " + e.getMessage());
+            return null;
+        }
+    }
+
     public boolean removeFamilyTree(FamilyTreeDTO familyTreeDTO) {
         try {
             logger.info("Deleting " + familyTreeDTO.getName() + " family tree...");

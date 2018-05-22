@@ -8,7 +8,11 @@ public class FamilyTreeMemberDTO {
 
     public void setFamilyTree(FamilyTreeDTO familyTree) {
         this.familyTree = familyTree;
-        familyTreeId = familyTree.getId();
+        if (familyTree == null) {
+            familyTreeId = 0;
+        } else {
+            familyTreeId = familyTree.getId();
+        }
     }
 
     public FamilyTreeDTO getFamilyTree() {

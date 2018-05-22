@@ -3,6 +3,7 @@ package com.wright.ftm.services;
 import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.dtos.FamilyTreeMemberDTO;
 import com.wright.ftm.repositories.FamilyTreeMembersRepository;
+import com.wright.ftm.repositories.FamilyTreesRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -16,16 +17,24 @@ import static org.mockito.Mockito.*;
 
 public class FamilyTreeMembersServiceTest {
     private FamilyTreeMembersService classToTest;
+    private List<FamilyTreeMemberDTO> expectedFamilyTreeMemberDTOs;
     private FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
     private FamilyTreeDTO familyTreeDTO = new FamilyTreeDTO();
     private FamilyTreeMembersRepository mockFamilyTreeMembersRepository = mock(FamilyTreeMembersRepository.class);
+    private FamilyTreesRepository mockFamilyTreesRepository = mock(FamilyTreesRepository.class);
 
     @BeforeEach
     void setUp() throws Exception {
+        expectedFamilyTreeMemberDTOs = Collections.singletonList(familyTreeMemberDTO);
         familyTreeDTO.setId(10);
+        familyTreeMemberDTO.setFamilyTreeId(familyTreeDTO.getId());
+
+        when(mockFamilyTreeMembersRepository.getFamilyMembers(familyTreeDTO.getId())).thenReturn(expectedFamilyTreeMemberDTOs);
+        when(mockFamilyTreesRepository.getFamilyTree(familyTreeDTO.getId())).thenReturn(familyTreeDTO);
 
         classToTest = new FamilyTreeMembersService();
         classToTest.setFamilyTreeMembersRepository(mockFamilyTreeMembersRepository);
+        classToTest.setFamilyTreesRepository(mockFamilyTreesRepository);
     }
 
     @Test
@@ -59,11 +68,15 @@ public class FamilyTreeMembersServiceTest {
 
     @Test
     void testGetFamilyMembersReturnsFamilyMemberForFamilyTree() throws Exception {
-        List<FamilyTreeMemberDTO> expectedFamilyTreeMemberDTOs = Collections.singletonList(familyTreeMemberDTO);
-
-        when(mockFamilyTreeMembersRepository.getFamilyMembers(familyTreeDTO.getId())).thenReturn(expectedFamilyTreeMemberDTOs);
-
         assertEquals(expectedFamilyTreeMemberDTOs, classToTest.getFamilyMembers(familyTreeDTO));
+    }
+
+    @Test
+    void testGetFamilyMembersPopulatesFamilyTreeOnEachFamilyMember() throws Exception {
+        List<FamilyTreeMemberDTO> familyTreeMemberDTOs = classToTest.getFamilyMembers(familyTreeDTO);
+
+        FamilyTreeMemberDTO familyTreeMemberDTO = familyTreeMemberDTOs.get(0);
+        assertEquals(familyTreeDTO, familyTreeMemberDTO.getFamilyTree());
     }
 
     @Test

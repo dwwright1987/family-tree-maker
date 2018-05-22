@@ -74,14 +74,24 @@ class FamilyTreesServiceTest {
     }
 
     @Test
+    void testGetFamilyTreeReturnsFamilyTreeForGivenId() throws Exception {
+        when(mockFamilyTreesRepository.getFamilyTree(familyTreeDTO.getId())).thenReturn(familyTreeDTO);
+
+        assertEquals(familyTreeDTO, classToTest.getFamilyTree(familyTreeDTO.getId()));
+    }
+
+    @Test
+    void testGetFamilyTreeReturnsNullWhenThereIsAnExceptions() throws Exception {
+        when(mockFamilyTreesRepository.getFamilyTree(familyTreeDTO.getId())).thenThrow(new SQLException());
+
+        assertNull(classToTest.getFamilyTree(familyTreeDTO.getId()));
+    }
+
+    @Test
     void testRemoveFamilyTreeReturnsResultOfDelete() throws Exception {
-        boolean result = true;
+        when(mockFamilyTreesRepository.deleteFamilyTree(familyTreeDTO.getId())).thenReturn(true);
 
-        when(mockFamilyTreesRepository.deleteFamilyTree(familyTreeDTO.getId())).thenReturn(result);
-
-        boolean actualResult = classToTest.removeFamilyTree(familyTreeDTO);
-
-        assertEquals(actualResult, result);
+        assertTrue(classToTest.removeFamilyTree(familyTreeDTO));
     }
 
     @Test

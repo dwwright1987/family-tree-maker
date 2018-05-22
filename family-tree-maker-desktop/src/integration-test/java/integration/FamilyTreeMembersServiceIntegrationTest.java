@@ -47,6 +47,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
 
         actualFamilyTreeMemberDTO = familyTreeMemberDTOs.get(0);
         assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
+        assertEquals(familyTreeDTO.getName(), actualFamilyTreeMemberDTO.getFamilyTree().getName());
     }
 
     @Test
@@ -62,5 +63,6 @@ public class FamilyTreeMembersServiceIntegrationTest {
 
         actualFamilyTreeMemberDTO = familyTreeMemberDTOs.get(0);
         assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
+        assertEquals(familyTreeDTO.getName(), actualFamilyTreeMemberDTO.getFamilyTree().getName());
     }
 }

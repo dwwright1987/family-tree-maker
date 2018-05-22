@@ -40,6 +40,15 @@ public class FamilyTreesServiceIntegrationTest {
     }
 
     @Test
+    void testCanGetFamilyTreeById() throws Exception {
+        FamilyTreeDTO expectedFamilyTreeDTO = familyTreesService.createFamilyTree(EXPECTED_FAMILY_NAME);
+
+        FamilyTreeDTO familyTreeDTO = familyTreesService.getFamilyTree(expectedFamilyTreeDTO.getId());
+
+        assertEquals(EXPECTED_FAMILY_NAME, familyTreeDTO.getName());
+    }
+
+    @Test
     void testDeletesFamilyTrees() throws Exception {
         familyTreesService.createFamilyTree(EXPECTED_FAMILY_NAME);
 

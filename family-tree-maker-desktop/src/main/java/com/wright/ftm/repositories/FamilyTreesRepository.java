@@ -29,6 +29,18 @@ public class FamilyTreesRepository {
         return familyTreesMapper.map(resultSet);
     }
 
+    public FamilyTreeDTO getFamilyTree(int id) throws SQLException {
+        String statement = "SELECT * FROM " + FAMILY_TREES_TABLE_NAME + " WHERE ID = " + id;
+        ResultSet resultSet = dbManager.query(statement);
+
+        List<FamilyTreeDTO> familyTreeDTOs = familyTreesMapper.map(resultSet);
+        if (familyTreeDTOs.isEmpty()) {
+            return null;
+        } else {
+            return familyTreeDTOs.get(0);
+        }
+    }
+
     void setDbManager(DbManager dbManager) {
         this.dbManager = dbManager;
     }
