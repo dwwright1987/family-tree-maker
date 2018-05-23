@@ -5,6 +5,7 @@ public class FamilyTreeMemberDTO {
     private int familyTreeId;
     private String firstName;
     private int id;
+    private String lastName;
     private String middleName = "";
     private Sex sex;
 
@@ -43,6 +44,14 @@ public class FamilyTreeMemberDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public void setMiddleName(String middleName) {

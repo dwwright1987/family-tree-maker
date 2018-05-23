@@ -40,6 +40,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
         expectedFamilyTreeMemberDTO.setSex(MALE);
         expectedFamilyTreeMemberDTO.setFirstName("Daniel");
         expectedFamilyTreeMemberDTO.setMiddleName("Woolf");
+        expectedFamilyTreeMemberDTO.setLastName("Wright");
 
         FamilyTreeMemberDTO actualFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(expectedFamilyTreeMemberDTO, familyTreeDTO);
         assertTrue(actualFamilyTreeMemberDTO.getId() > 0);
@@ -52,6 +53,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
         assertEquals(expectedFamilyTreeMemberDTO.getFirstName(), actualFamilyTreeMemberDTO.getFirstName());
         assertEquals(expectedFamilyTreeMemberDTO.getMiddleName(), actualFamilyTreeMemberDTO.getMiddleName());
+        assertEquals(expectedFamilyTreeMemberDTO.getLastName(), actualFamilyTreeMemberDTO.getLastName());
     }
 
     @Test
@@ -59,6 +61,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
         FamilyTreeMemberDTO expectedFamilyTreeMemberDTO = new FamilyTreeMemberDTO();
         expectedFamilyTreeMemberDTO.setSex(FEMALE);
         expectedFamilyTreeMemberDTO.setFirstName("Laura");
+        expectedFamilyTreeMemberDTO.setLastName("Wright");
 
         FamilyTreeMemberDTO actualFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(expectedFamilyTreeMemberDTO, familyTreeDTO);
         assertTrue(actualFamilyTreeMemberDTO.getId() > 0);
@@ -71,5 +74,6 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
         assertEquals(expectedFamilyTreeMemberDTO.getFirstName(), actualFamilyTreeMemberDTO.getFirstName());
         assertEquals(0, actualFamilyTreeMemberDTO.getMiddleName().length());
+        assertEquals(expectedFamilyTreeMemberDTO.getLastName(), actualFamilyTreeMemberDTO.getLastName());
     }
 }

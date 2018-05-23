@@ -14,11 +14,12 @@ public class FamilyTreeMembersRepository {
     private FamilyTreeMembersMapper familyTreeMembersMapper = new FamilyTreeMembersMapper();
 
     public int createFamilyMember(FamilyTreeMemberDTO familyTreeMemberDTO) throws SQLException {
-        String statement = "INSERT INTO " + FAMILY_TREE_MEMBERS_TABLE_NAME + " (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME) VALUES (" +
+        String statement = "INSERT INTO " + FAMILY_TREE_MEMBERS_TABLE_NAME + " (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME) VALUES (" +
             familyTreeMemberDTO.getFamilyTreeId() + ", " +
             familyTreeMemberDTO.getSex().ordinal() + ", " +
             "'" + familyTreeMemberDTO.getFirstName() + "', " +
-            "'" + familyTreeMemberDTO.getMiddleName() + "'" +
+            "'" + familyTreeMemberDTO.getMiddleName() + "', " +
+            "'" + familyTreeMemberDTO.getLastName() + "'" +
         ")";
 
         return dbManager.insert(statement);
