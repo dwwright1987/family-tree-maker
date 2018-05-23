@@ -30,4 +30,25 @@ class FamilyTreeMemberDTOTest {
         assertNull(classToTest.getFamilyTree());
         assertEquals(0, classToTest.getFamilyTreeId());
     }
+
+    @Test
+    void testMiddleNameIsAnEmptyStringWhenNotSet() throws Exception {
+        assertEquals(0, classToTest.getMiddleName().length());
+    }
+
+    @Test
+    void testMiddleNameIsSetToGiveNameWhenNotNull() throws Exception {
+        String expectedMiddleName = "Woolf";
+
+        classToTest.setMiddleName(expectedMiddleName);
+
+        assertEquals(expectedMiddleName, classToTest.getMiddleName());
+    }
+
+    @Test
+    void testMiddleNamesIsEmptyWhenSettingItToNull() throws Exception {
+        classToTest.setMiddleName(null);
+
+        assertEquals(0, classToTest.getMiddleName().length());
+    }
 }

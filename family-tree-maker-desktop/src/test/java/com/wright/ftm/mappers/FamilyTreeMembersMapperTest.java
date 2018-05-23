@@ -40,12 +40,14 @@ class FamilyTreeMembersMapperTest {
         int expectedFamilyTreeId2 = 4;
         String expectedFirstName1 = "Daniel";
         String expectedFirstName2 = "Laura";
+        String expectedMiddleName1 = "Woolf";
 
         when(mockResultSet.next()).thenReturn(true, true, false);
         when(mockResultSet.getInt("ID")).thenReturn(expectedId1, expectedId2);
         when(mockResultSet.getInt("FAMILY_TREE_ID")).thenReturn(expectedFamilyTreeId1, expectedFamilyTreeId2);
         when(mockResultSet.getInt("SEX")).thenReturn(1, 0);
         when(mockResultSet.getString("FIRST_NAME")).thenReturn(expectedFirstName1, expectedFirstName2);
+        when(mockResultSet.getString("MIDDLE_NAME")).thenReturn(expectedMiddleName1, null);
 
         List<FamilyTreeMemberDTO> familyTreeMemberDTOs = classToTest.map(mockResultSet);
 
@@ -56,12 +58,14 @@ class FamilyTreeMembersMapperTest {
         assertEquals(expectedFamilyTreeId1, familyTreeMemberDTO1.getFamilyTreeId());
         assertEquals(MALE, familyTreeMemberDTO1.getSex());
         assertEquals(expectedFirstName1, familyTreeMemberDTO1.getFirstName());
+        assertEquals(expectedMiddleName1, familyTreeMemberDTO1.getMiddleName());
 
         FamilyTreeMemberDTO familyTreeMemberDTO2 = familyTreeMemberDTOs.get(1);
         assertEquals(expectedId2, familyTreeMemberDTO2.getId());
         assertEquals(expectedFamilyTreeId2, familyTreeMemberDTO2.getFamilyTreeId());
         assertEquals(FEMALE, familyTreeMemberDTO2.getSex());
         assertEquals(expectedFirstName2, familyTreeMemberDTO2.getFirstName());
+        assertEquals(0, familyTreeMemberDTO2.getMiddleName().length());
     }
 
     @Test
