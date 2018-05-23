@@ -85,6 +85,7 @@ public class FamiliesNode {
 
                 if (selected) {
                     familyTreeNode.setSelectedFamilyTreeDTO(getItem());
+                    familyTreeNode.setVisible(true);
                 }
             }
         };

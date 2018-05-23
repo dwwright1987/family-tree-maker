@@ -15,15 +15,17 @@ import static com.wright.ftm.Constants.DEFAULT_PADDING;
 import static javafx.scene.paint.Color.WHITE;
 
 public class FamilyTreeNode {
+    private VBox familyTreeBox;
     private FamilyTreeMembersService familyTreeMembersService = new FamilyTreeMembersService();
     private FamilyTreeDTO selectedFamilyTreeDTO;
 
     public VBox build() {
-        VBox familyTreeBox = new VBox();
+        familyTreeBox = new VBox();
         familyTreeBox.setAlignment(Pos.CENTER);
         familyTreeBox.setPadding(new Insets(DEFAULT_PADDING));
         familyTreeBox.setSpacing(DEFAULT_PADDING);
         familyTreeBox.getChildren().addAll(createFamilyTreePane(familyTreeBox), createAddFamilyMemberButton());
+        familyTreeBox.setVisible(false);
 
         return familyTreeBox;
     }
@@ -57,5 +59,11 @@ public class FamilyTreeNode {
 
     public void setSelectedFamilyTreeDTO(FamilyTreeDTO familyTreeDTO) {
         selectedFamilyTreeDTO = familyTreeDTO;
+    }
+
+    public void setVisible(boolean visible) {
+        if (familyTreeBox != null) {
+            familyTreeBox.setVisible(visible);
+        }
     }
 }
