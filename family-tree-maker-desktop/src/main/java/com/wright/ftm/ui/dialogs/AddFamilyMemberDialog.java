@@ -20,12 +20,13 @@ import static com.wright.ftm.dtos.Sex.MALE;
 public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
     private static final String FEMALE_SEX_OPTION = "Female";
     private static final String MALE_SEX_OPTION = "Male";
-    private TextField firstNameTextField = createRequiredTextField();
+    private TextField firstNameTextField = createTextField(true);
+    private TextField middleNameTextField = createTextField(false);
     private ComboBox sexOptions = new ComboBox(FXCollections.observableArrayList(FEMALE_SEX_OPTION, MALE_SEX_OPTION));
     private double width = 300;
 
     public AddFamilyMemberDialog() {
-        setHeight(130);
+        setHeight(175);
         setWidth(width);
         setTitle("Add Family Member");
         setDialogPane(buildPane());
@@ -42,7 +43,8 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         VBox inputs = new VBox();
         inputs.getChildren().addAll(
             createSexInput(),
-            createFirstNameInput()
+            createInput("First Name:", firstNameTextField),
+            createInput("Middle Name:", middleNameTextField)
         );
 
         DialogPane dialogPane = new DialogPane();
@@ -56,10 +58,6 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
     private HBox createSexInput() {
         sexOptions.getSelectionModel().selectFirst();
         return createInput("Sex:", sexOptions);
-    }
-
-    private HBox createFirstNameInput() {
-        return createInput("First Name:", firstNameTextField);
     }
 
     private HBox createInput(String labelText, Control control) {
@@ -83,6 +81,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
             FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
             familyTreeMemberDTO.setSex(determineSex());
             familyTreeMemberDTO.setFirstName(firstNameTextField.getText());
+            familyTreeMemberDTO.setMiddleName(middleNameTextField.getText());
 
             return familyTreeMemberDTO;
         } else {
@@ -98,11 +97,10 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         }
     }
 
-    private TextField createRequiredTextField() {
+    private TextField createTextField(boolean required) {
         TextField textField = new TextField();
-        textField.setBorder(createTextFieldBorder(Color.RED));
         textField.setOnKeyReleased(event -> {
-            if (StringUtils.isEmpty(textField.getText())) {
+            if (StringUtils.isEmpty(textField.getText()) && required) {
                 textField.setBorder(createTextFieldBorder(Color.RED));
             } else {
                 textField.setBorder(createTextFieldBorder(Color.DIMGRAY));
@@ -110,6 +108,10 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
 
             updateOkButtonState();
         });
+
+        if (required) {
+            textField.setBorder(createTextFieldBorder(Color.RED));
+        }
 
         return textField;
     }
