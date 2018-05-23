@@ -1,5 +1,6 @@
 package com.wright.ftm.ui.dialogs;
 
+import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.dtos.FamilyTreeMemberDTO;
 import com.wright.ftm.dtos.Sex;
 import com.wright.ftm.ui.utils.GraphicsUtils;
@@ -22,14 +23,15 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
     private static final String MALE_SEX_OPTION = "Male";
     private TextField firstNameTextField = createTextField(true);
     private TextField middleNameTextField = createTextField(false);
+    private TextField lastNameTextField = createTextField(true);
     private ComboBox sexOptions = new ComboBox(FXCollections.observableArrayList(FEMALE_SEX_OPTION, MALE_SEX_OPTION));
     private double width = 300;
 
-    public AddFamilyMemberDialog() {
-        setHeight(175);
+    public AddFamilyMemberDialog(FamilyTreeDTO familyTreeDTO) {
+        setHeight(220);
         setWidth(width);
         setTitle("Add Family Member");
-        setDialogPane(buildPane());
+        setDialogPane(buildPane(familyTreeDTO));
         setResultConverter(this::handleClose);
 
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
@@ -39,13 +41,17 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         setOkButtonDisabled(true);
     }
 
-    private DialogPane buildPane() {
+    private DialogPane buildPane(FamilyTreeDTO familyTreeDTO) {
         VBox inputs = new VBox();
         inputs.getChildren().addAll(
             createSexInput(),
             createInput("First Name:", firstNameTextField),
-            createInput("Middle Name:", middleNameTextField)
+            createInput("Middle Name:", middleNameTextField),
+            createInput("Last Name:", lastNameTextField)
         );
+
+        lastNameTextField.setText(familyTreeDTO.getName());
+        updateTextFieldBorder(lastNameTextField, true);
 
         DialogPane dialogPane = new DialogPane();
         dialogPane.setPrefHeight(getHeight());
@@ -82,6 +88,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
             familyTreeMemberDTO.setSex(determineSex());
             familyTreeMemberDTO.setFirstName(firstNameTextField.getText());
             familyTreeMemberDTO.setMiddleName(middleNameTextField.getText());
+            familyTreeMemberDTO.setLastName(lastNameTextField.getText());
 
             return familyTreeMemberDTO;
         } else {
@@ -100,12 +107,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
     private TextField createTextField(boolean required) {
         TextField textField = new TextField();
         textField.setOnKeyReleased(event -> {
-            if (StringUtils.isEmpty(textField.getText()) && required) {
-                textField.setBorder(createTextFieldBorder(Color.RED));
-            } else {
-                textField.setBorder(createTextFieldBorder(Color.DIMGRAY));
-            }
-
+            updateTextFieldBorder(textField, required);
             updateOkButtonState();
         });
 
@@ -116,12 +118,20 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         return textField;
     }
 
+    private void updateTextFieldBorder(TextField textField, boolean required) {
+        if (StringUtils.isEmpty(textField.getText()) && required) {
+            textField.setBorder(createTextFieldBorder(Color.RED));
+        } else {
+            textField.setBorder(createTextFieldBorder(Color.DIMGRAY));
+        }
+    }
+
     private Border createTextFieldBorder(Paint color) {
         return new Border(new BorderStroke(color, color, color, color, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID , BorderStrokeStyle.SOLID, new CornerRadii(2), BorderWidths.DEFAULT, Insets.EMPTY));
     }
 
     private void updateOkButtonState() {
-        if (StringUtils.isNotEmpty(firstNameTextField.getText())) {
+        if (StringUtils.isNotEmpty(firstNameTextField.getText()) && StringUtils.isNotEmpty(lastNameTextField.getText())) {
             setOkButtonDisabled(false);
         } else {
             setOkButtonDisabled(true);

@@ -48,7 +48,7 @@ public class FamilyTreeNode {
     }
 
     private void addFamilyMemberDialog() {
-        AddFamilyMemberDialog addFamilyMemberDialog = new AddFamilyMemberDialog();
+        AddFamilyMemberDialog addFamilyMemberDialog = new AddFamilyMemberDialog(selectedFamilyTreeDTO);
         addFamilyMemberDialog.showAndWait().ifPresent(familyTreeMemberDTO -> {
             FamilyTreeMemberDTO createdFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(familyTreeMemberDTO, selectedFamilyTreeDTO);
             if (createdFamilyTreeMemberDTO == null) {
