@@ -82,6 +82,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         if (response == ButtonType.OK) {
             FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
             familyTreeMemberDTO.setSex(determineSex());
+            familyTreeMemberDTO.setFirstName(firstNameTextField.getText());
 
             return familyTreeMemberDTO;
         } else {
