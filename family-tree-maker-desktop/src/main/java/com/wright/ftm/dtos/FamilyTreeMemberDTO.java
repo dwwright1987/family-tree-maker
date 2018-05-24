@@ -1,5 +1,7 @@
 package com.wright.ftm.dtos;
 
+import java.sql.Date;
+
 public class FamilyTreeMemberDTO {
     private FamilyTreeDTO familyTree;
     private int familyTreeId;
@@ -8,6 +10,7 @@ public class FamilyTreeMemberDTO {
     private String lastName;
     private String middleName = "";
     private Sex sex;
+    private Date birthDate;
 
     public void setFamilyTree(FamilyTreeDTO familyTree) {
         this.familyTree = familyTree;
@@ -18,24 +21,32 @@ public class FamilyTreeMemberDTO {
         }
     }
 
-    public FamilyTreeDTO getFamilyTree() {
-        return familyTree;
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 
     public int getFamilyTreeId() {
         return familyTreeId;
     }
 
+    public FamilyTreeDTO getFamilyTree() {
+        return familyTree;
+    }
+
     public void setFamilyTreeId(int familyTreeId) {
         this.familyTreeId = familyTreeId;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public int getId() {
@@ -46,12 +57,16 @@ public class FamilyTreeMemberDTO {
         this.id = id;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getMiddleName() {
+        return middleName;
     }
 
     public void setMiddleName(String middleName) {
@@ -60,10 +75,6 @@ public class FamilyTreeMemberDTO {
         } else {
             this.middleName = middleName;
         }
-    }
-
-    public String getMiddleName() {
-        return middleName;
     }
 
     public Sex getSex() {

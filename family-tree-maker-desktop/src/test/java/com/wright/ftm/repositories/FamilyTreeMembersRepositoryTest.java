@@ -6,8 +6,11 @@ import com.wright.ftm.mappers.FamilyTreeMembersMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Date;
 import java.sql.ResultSet;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.wright.ftm.dtos.Sex.MALE;
@@ -29,20 +32,25 @@ class FamilyTreeMembersRepositoryTest {
 
     @Test
     void testCreateFamilyNameReturnsIdForInsertIntoFamilyNamesTable() throws Exception {
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(1987, Calendar.SEPTEMBER, 1);
+
         FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
         familyTreeMemberDTO.setFamilyTreeId(29);
         familyTreeMemberDTO.setSex(MALE);
         familyTreeMemberDTO.setFirstName("Daniel");
         familyTreeMemberDTO.setMiddleName("Woolf");
         familyTreeMemberDTO.setLastName("Wright");
+        familyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
 
         int expectedId = 30;
-        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME) VALUES (" +
+        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE) VALUES (" +
             familyTreeMemberDTO.getFamilyTreeId() + ", " +
             familyTreeMemberDTO.getSex().ordinal() + ", " +
             "'" + familyTreeMemberDTO.getFirstName() + "', " +
             "'" + familyTreeMemberDTO.getMiddleName() + "', " +
-            "'" + familyTreeMemberDTO.getLastName() + "'" +
+            "'" + familyTreeMemberDTO.getLastName() + "', " +
+            "'" + familyTreeMemberDTO.getBirthDate() + "'" +
         ")";
 
         when(mockDbManager.insert(expectedStatement)).thenReturn(expectedId);
