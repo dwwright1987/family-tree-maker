@@ -3,14 +3,16 @@ package com.wright.ftm.ui.dialogs;
 import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.dtos.FamilyTreeMemberDTO;
 import com.wright.ftm.dtos.Sex;
+import com.wright.ftm.ui.controls.FamilyTreeMakerTextField;
+import com.wright.ftm.ui.controls.TextFieldActionHandler;
 import com.wright.ftm.ui.utils.GraphicsUtils;
 import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.commons.lang.StringUtils;
 
@@ -18,12 +20,12 @@ import static com.wright.ftm.Constants.DEFAULT_PADDING;
 import static com.wright.ftm.dtos.Sex.FEMALE;
 import static com.wright.ftm.dtos.Sex.MALE;
 
-public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
+public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implements TextFieldActionHandler {
     private static final String FEMALE_SEX_OPTION = "Female";
     private static final String MALE_SEX_OPTION = "Male";
-    private TextField firstNameTextField = createTextField(true);
-    private TextField middleNameTextField = createTextField(false);
-    private TextField lastNameTextField = createTextField(true);
+    private FamilyTreeMakerTextField firstNameTextField = new FamilyTreeMakerTextField(true, this);
+    private FamilyTreeMakerTextField middleNameTextField = new FamilyTreeMakerTextField(false, this);
+    private FamilyTreeMakerTextField lastNameTextField = new FamilyTreeMakerTextField(true, this);
     private ComboBox sexOptions = new ComboBox(FXCollections.observableArrayList(FEMALE_SEX_OPTION, MALE_SEX_OPTION));
     private double width = 300;
 
@@ -45,13 +47,12 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         VBox inputs = new VBox();
         inputs.getChildren().addAll(
             createSexInput(),
-            createInput("First Name:", firstNameTextField),
-            createInput("Middle Name:", middleNameTextField),
-            createInput("Last Name:", lastNameTextField)
+            createInput("First Name:", firstNameTextField.getTextField()),
+            createInput("Middle Name:", middleNameTextField.getTextField()),
+            createInput("Last Name:", lastNameTextField.getTextField())
         );
 
         lastNameTextField.setText(familyTreeDTO.getName());
-        updateTextFieldBorder(lastNameTextField, true);
 
         DialogPane dialogPane = new DialogPane();
         dialogPane.setPrefHeight(getHeight());
@@ -104,33 +105,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
         }
     }
 
-    private TextField createTextField(boolean required) {
-        TextField textField = new TextField();
-        textField.setOnKeyReleased(event -> {
-            updateTextFieldBorder(textField, required);
-            updateOkButtonState();
-        });
-
-        if (required) {
-            textField.setBorder(createTextFieldBorder(Color.RED));
-        }
-
-        return textField;
-    }
-
-    private void updateTextFieldBorder(TextField textField, boolean required) {
-        if (StringUtils.isEmpty(textField.getText()) && required) {
-            textField.setBorder(createTextFieldBorder(Color.RED));
-        } else {
-            textField.setBorder(createTextFieldBorder(Color.DIMGRAY));
-        }
-    }
-
-    private Border createTextFieldBorder(Paint color) {
-        return new Border(new BorderStroke(color, color, color, color, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID , BorderStrokeStyle.SOLID, new CornerRadii(2), BorderWidths.DEFAULT, Insets.EMPTY));
-    }
-
-    private void updateOkButtonState() {
+    public void onTextFieldKeyReleased() {
         if (StringUtils.isNotEmpty(firstNameTextField.getText()) && StringUtils.isNotEmpty(lastNameTextField.getText())) {
             setOkButtonDisabled(false);
         } else {
@@ -139,6 +114,9 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> {
     }
 
     private void setOkButtonDisabled(boolean disabled) {
-        getDialogPane().lookupButton(ButtonType.OK).setDisable(disabled);
+        Node okButton = getDialogPane().lookupButton(ButtonType.OK);
+        if (okButton != null) {
+            okButton.setDisable(disabled);
+        }
     }
 }
