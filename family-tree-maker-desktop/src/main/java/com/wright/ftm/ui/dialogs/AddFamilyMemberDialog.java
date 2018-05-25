@@ -3,8 +3,9 @@ package com.wright.ftm.ui.dialogs;
 import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.dtos.FamilyTreeMemberDTO;
 import com.wright.ftm.dtos.Sex;
+import com.wright.ftm.ui.controls.FamilyTreeMakerControlEvenHandler;
+import com.wright.ftm.ui.controls.FamilyTreeMakerDatePicker;
 import com.wright.ftm.ui.controls.FamilyTreeMakerTextField;
-import com.wright.ftm.ui.controls.TextFieldActionHandler;
 import com.wright.ftm.ui.utils.GraphicsUtils;
 import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.collections.FXCollections;
@@ -20,17 +21,18 @@ import static com.wright.ftm.Constants.DEFAULT_PADDING;
 import static com.wright.ftm.dtos.Sex.FEMALE;
 import static com.wright.ftm.dtos.Sex.MALE;
 
-public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implements TextFieldActionHandler {
+public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implements FamilyTreeMakerControlEvenHandler {
     private static final String FEMALE_SEX_OPTION = "Female";
     private static final String MALE_SEX_OPTION = "Male";
+    private FamilyTreeMakerDatePicker birthDatePicker = new FamilyTreeMakerDatePicker(true, this);
     private FamilyTreeMakerTextField firstNameTextField = new FamilyTreeMakerTextField(true, this);
-    private FamilyTreeMakerTextField middleNameTextField = new FamilyTreeMakerTextField(false, this);
     private FamilyTreeMakerTextField lastNameTextField = new FamilyTreeMakerTextField(true, this);
+    private FamilyTreeMakerTextField middleNameTextField = new FamilyTreeMakerTextField(false, this);
     private ComboBox sexOptions = new ComboBox(FXCollections.observableArrayList(FEMALE_SEX_OPTION, MALE_SEX_OPTION));
     private double width = 300;
 
     public AddFamilyMemberDialog(FamilyTreeDTO familyTreeDTO) {
-        setHeight(220);
+        setHeight(265);
         setWidth(width);
         setTitle("Add Family Member");
         setDialogPane(buildPane(familyTreeDTO));
@@ -49,7 +51,8 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
             createSexInput(),
             createInput("First Name:", firstNameTextField.getTextField()),
             createInput("Middle Name:", middleNameTextField.getTextField()),
-            createInput("Last Name:", lastNameTextField.getTextField())
+            createInput("Last Name:", lastNameTextField.getTextField()),
+            createInput("Birth Date:", birthDatePicker.getDatePicker())
         );
 
         lastNameTextField.setText(familyTreeDTO.getName());
@@ -90,6 +93,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
             familyTreeMemberDTO.setFirstName(firstNameTextField.getText());
             familyTreeMemberDTO.setMiddleName(middleNameTextField.getText());
             familyTreeMemberDTO.setLastName(lastNameTextField.getText());
+            familyTreeMemberDTO.setBirthDate(birthDatePicker.getDate());
 
             return familyTreeMemberDTO;
         } else {
@@ -105,12 +109,16 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
         }
     }
 
-    public void onTextFieldKeyReleased() {
-        if (StringUtils.isNotEmpty(firstNameTextField.getText()) && StringUtils.isNotEmpty(lastNameTextField.getText())) {
+    public void onFamilyTreeMakerControlEvent() {
+        if (allRequiredFieldFilledOut()) {
             setOkButtonDisabled(false);
         } else {
             setOkButtonDisabled(true);
         }
+    }
+
+    private boolean allRequiredFieldFilledOut() {
+        return StringUtils.isNotEmpty(firstNameTextField.getText()) && StringUtils.isNotEmpty(lastNameTextField.getText()) && birthDatePicker.getDate() != null;
     }
 
     private void setOkButtonDisabled(boolean disabled) {

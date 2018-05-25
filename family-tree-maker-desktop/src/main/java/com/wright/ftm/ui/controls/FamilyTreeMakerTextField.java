@@ -1,51 +1,30 @@
 package com.wright.ftm.ui.controls;
 
-import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import org.apache.commons.lang.StringUtils;
 
-public class FamilyTreeMakerTextField {
-    private TextFieldActionHandler delegate;
-    private boolean required;
-    private TextField textField;
+public class FamilyTreeMakerTextField extends FamilyTreeMakerControl {
+    private TextField textField = createTextField();
 
-    public FamilyTreeMakerTextField(boolean required, TextFieldActionHandler delegate) {
-        this.delegate = delegate;
-        this.required = required;
-        textField = createTextField(required);
+    public FamilyTreeMakerTextField(boolean required, FamilyTreeMakerControlEvenHandler delegate) {
+        super(required, delegate);
     }
 
-    private TextField createTextField(boolean isRequired) {
+    private TextField createTextField() {
         TextField textField = new TextField();
-        textField.setOnKeyReleased(event -> onTextUpdate());
+        textField.setOnKeyReleased(event -> onControlAction(textField));
 
-        if (isRequired) {
-            textField.setBorder(createTextFieldBorder(Color.RED));
-        }
+        updateBorder(textField);
 
         return textField;
     }
 
-    private void onTextUpdate() {
-        updateTextFieldBorder();
-        if (delegate != null) {
-            delegate.onTextFieldKeyReleased();
-        }
-    }
-
-    private void updateTextFieldBorder() {
-        if (StringUtils.isEmpty(textField.getText()) && required) {
-            textField.setBorder(createTextFieldBorder(Color.RED));
+    protected boolean requirementsMet() {
+        if (textField != null) {
+            return !StringUtils.isEmpty(textField.getText());
         } else {
-            textField.setBorder(createTextFieldBorder(Color.DIMGRAY));
+            return false;
         }
-    }
-
-    private Border createTextFieldBorder(Paint color) {
-        return new Border(new BorderStroke(color, color, color, color, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID , BorderStrokeStyle.SOLID, new CornerRadii(2), BorderWidths.DEFAULT, Insets.EMPTY));
     }
 
     public String getText() {
@@ -54,7 +33,7 @@ public class FamilyTreeMakerTextField {
 
     public void setText(String text) {
         textField.setText(text);
-        onTextUpdate();
+        onControlAction(textField);
     }
 
     public TextField getTextField() {
