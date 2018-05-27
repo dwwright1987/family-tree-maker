@@ -25,6 +25,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
     private static final String FEMALE_SEX_OPTION = "Female";
     private static final String MALE_SEX_OPTION = "Male";
     private FamilyTreeMakerDatePicker birthDatePicker = new FamilyTreeMakerDatePicker(true, this);
+    private FamilyTreeMakerDatePicker deathDatePicker = new FamilyTreeMakerDatePicker(false, this);
     private FamilyTreeMakerTextField firstNameTextField = new FamilyTreeMakerTextField(true, this);
     private FamilyTreeMakerTextField lastNameTextField = new FamilyTreeMakerTextField(true, this);
     private FamilyTreeMakerTextField middleNameTextField = new FamilyTreeMakerTextField(false, this);
@@ -32,7 +33,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
     private double width = 300;
 
     public AddFamilyMemberDialog(FamilyTreeDTO familyTreeDTO) {
-        setHeight(265);
+        setHeight(315);
         setWidth(width);
         setTitle("Add Family Member");
         setDialogPane(buildPane(familyTreeDTO));
@@ -52,7 +53,8 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
             createInput("First Name:", firstNameTextField.getTextField()),
             createInput("Middle Name:", middleNameTextField.getTextField()),
             createInput("Last Name:", lastNameTextField.getTextField()),
-            createInput("Birth Date:", birthDatePicker.getDatePicker())
+            createInput("Birth Date:", birthDatePicker.getDatePicker()),
+            createInput("Death Date:", deathDatePicker.getDatePicker())
         );
 
         lastNameTextField.setText(familyTreeDTO.getName());
@@ -94,6 +96,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
             familyTreeMemberDTO.setMiddleName(middleNameTextField.getText());
             familyTreeMemberDTO.setLastName(lastNameTextField.getText());
             familyTreeMemberDTO.setBirthDate(birthDatePicker.getDate());
+            familyTreeMemberDTO.setDeathDate(deathDatePicker.getDate());
 
             return familyTreeMemberDTO;
         } else {
