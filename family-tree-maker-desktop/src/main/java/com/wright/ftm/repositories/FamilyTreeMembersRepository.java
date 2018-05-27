@@ -14,16 +14,24 @@ public class FamilyTreeMembersRepository {
     private FamilyTreeMembersMapper familyTreeMembersMapper = new FamilyTreeMembersMapper();
 
     public int createFamilyMember(FamilyTreeMemberDTO familyTreeMemberDTO) throws SQLException {
-        String statement = "INSERT INTO " + FAMILY_TREE_MEMBERS_TABLE_NAME + " (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE) VALUES (" +
-            familyTreeMemberDTO.getFamilyTreeId() + ", " +
-            familyTreeMemberDTO.getSex().ordinal() + ", " +
-            "'" + familyTreeMemberDTO.getFirstName() + "', " +
-            "'" + familyTreeMemberDTO.getMiddleName() + "', " +
-            "'" + familyTreeMemberDTO.getLastName() + "', " +
-            "'" + familyTreeMemberDTO.getBirthDate() + "'" +
-        ")";
+        StringBuilder statementBuilder = new StringBuilder();
+        statementBuilder.append("INSERT INTO ").append(FAMILY_TREE_MEMBERS_TABLE_NAME).append(" (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE");
+        if (familyTreeMemberDTO.getDeathDate() != null) {
+            statementBuilder.append(", DEATH_DATE");
+        }
+        statementBuilder.append(") VALUES (");
+        statementBuilder.append(familyTreeMemberDTO.getFamilyTreeId());
+        statementBuilder.append(", ").append(familyTreeMemberDTO.getSex().ordinal());
+        statementBuilder.append(", '").append(familyTreeMemberDTO.getFirstName()).append("'");
+        statementBuilder.append(", '").append(familyTreeMemberDTO.getMiddleName()).append("'");
+        statementBuilder.append(", '").append(familyTreeMemberDTO.getLastName()).append("'");
+        statementBuilder.append(", '").append(familyTreeMemberDTO.getBirthDate()).append("'");
+        if (familyTreeMemberDTO.getDeathDate() != null) {
+            statementBuilder.append(", '").append(familyTreeMemberDTO.getDeathDate()).append("'");
+        }
+        statementBuilder.append(")");
 
-        return dbManager.insert(statement);
+        return dbManager.insert(statementBuilder.toString());
     }
 
     public List<FamilyTreeMemberDTO> getFamilyMembers(int familyTreeId) throws SQLException {

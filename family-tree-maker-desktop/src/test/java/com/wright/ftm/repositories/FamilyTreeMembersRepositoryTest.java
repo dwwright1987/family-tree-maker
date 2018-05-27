@@ -31,9 +31,8 @@ class FamilyTreeMembersRepositoryTest {
     }
 
     @Test
-    void testCreateFamilyNameReturnsIdForInsertIntoFamilyNamesTable() throws Exception {
+    void testCreateFamilyMemberReturnsIdForInsertIntoFamilyNamesTable() throws Exception {
         Calendar calendar = new GregorianCalendar();
-        calendar.set(1987, Calendar.SEPTEMBER, 1);
 
         FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
         familyTreeMemberDTO.setFamilyTreeId(29);
@@ -41,17 +40,52 @@ class FamilyTreeMembersRepositoryTest {
         familyTreeMemberDTO.setFirstName("Daniel");
         familyTreeMemberDTO.setMiddleName("Woolf");
         familyTreeMemberDTO.setLastName("Wright");
+
+        calendar.set(1987, Calendar.SEPTEMBER, 1);
         familyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
 
+        calendar.set(2077, Calendar.AUGUST, 14);
+        familyTreeMemberDTO.setDeathDate(new Date(calendar.getTimeInMillis()));
+
         int expectedId = 30;
-        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE) VALUES (" +
+        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE, DEATH_DATE) VALUES (" +
             familyTreeMemberDTO.getFamilyTreeId() + ", " +
             familyTreeMemberDTO.getSex().ordinal() + ", " +
             "'" + familyTreeMemberDTO.getFirstName() + "', " +
             "'" + familyTreeMemberDTO.getMiddleName() + "', " +
             "'" + familyTreeMemberDTO.getLastName() + "', " +
-            "'" + familyTreeMemberDTO.getBirthDate() + "'" +
+            "'" + familyTreeMemberDTO.getBirthDate() + "', " +
+            "'" + familyTreeMemberDTO.getDeathDate() + "'" +
         ")";
+
+        when(mockDbManager.insert(expectedStatement)).thenReturn(expectedId);
+
+        assertEquals(expectedId, classToTest.createFamilyMember(familyTreeMemberDTO));
+    }
+
+    @Test
+    void testCreateFamilyMemberHandlesNullDeathDate() throws Exception {
+        Calendar calendar = new GregorianCalendar();
+
+        FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
+        familyTreeMemberDTO.setFamilyTreeId(29);
+        familyTreeMemberDTO.setSex(MALE);
+        familyTreeMemberDTO.setFirstName("Daniel");
+        familyTreeMemberDTO.setMiddleName("Woolf");
+        familyTreeMemberDTO.setLastName("Wright");
+
+        calendar.set(1987, Calendar.SEPTEMBER, 1);
+        familyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
+
+        int expectedId = 30;
+        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE) VALUES (" +
+                familyTreeMemberDTO.getFamilyTreeId() + ", " +
+                familyTreeMemberDTO.getSex().ordinal() + ", " +
+                "'" + familyTreeMemberDTO.getFirstName() + "', " +
+                "'" + familyTreeMemberDTO.getMiddleName() + "', " +
+                "'" + familyTreeMemberDTO.getLastName() + "', " +
+                "'" + familyTreeMemberDTO.getBirthDate() + "'" +
+                ")";
 
         when(mockDbManager.insert(expectedStatement)).thenReturn(expectedId);
 

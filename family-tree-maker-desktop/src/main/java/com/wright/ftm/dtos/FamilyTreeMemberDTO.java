@@ -3,6 +3,8 @@ package com.wright.ftm.dtos;
 import java.sql.Date;
 
 public class FamilyTreeMemberDTO {
+    private Date birthDate;
+    private Date deathDate;
     private FamilyTreeDTO familyTree;
     private int familyTreeId;
     private String firstName;
@@ -10,7 +12,6 @@ public class FamilyTreeMemberDTO {
     private String lastName;
     private String middleName = "";
     private Sex sex;
-    private Date birthDate;
 
     public void setFamilyTree(FamilyTreeDTO familyTree) {
         this.familyTree = familyTree;
@@ -27,6 +28,14 @@ public class FamilyTreeMemberDTO {
 
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public Date getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(Date deathDate) {
+        this.deathDate = deathDate;
     }
 
     public int getFamilyTreeId() {
