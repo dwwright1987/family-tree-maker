@@ -29,11 +29,12 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
     private FamilyTreeMakerTextField firstNameTextField = new FamilyTreeMakerTextField(true, this);
     private FamilyTreeMakerTextField lastNameTextField = new FamilyTreeMakerTextField(true, this);
     private FamilyTreeMakerTextField middleNameTextField = new FamilyTreeMakerTextField(false, this);
+    private TextArea notesTextArea = buildNotesTextArea();
     private ComboBox sexOptions = new ComboBox(FXCollections.observableArrayList(FEMALE_SEX_OPTION, MALE_SEX_OPTION));
-    private double width = 300;
+    private double width = 290;
 
     public AddFamilyMemberDialog(FamilyTreeDTO familyTreeDTO) {
-        setHeight(315);
+        setHeight(435);
         setWidth(width);
         setTitle("Add Family Member");
         setDialogPane(buildPane(familyTreeDTO));
@@ -46,6 +47,13 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
         setOkButtonDisabled(true);
     }
 
+    private TextArea buildNotesTextArea() {
+        TextArea textArea = new TextArea();
+        textArea.setMinHeight(100);
+        textArea.setMaxWidth(225);
+        return textArea;
+    }
+
     private DialogPane buildPane(FamilyTreeDTO familyTreeDTO) {
         VBox inputs = new VBox();
         inputs.getChildren().addAll(
@@ -54,7 +62,8 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
             createInput("Middle Name:", middleNameTextField.getTextField()),
             createInput("Last Name:", lastNameTextField.getTextField()),
             createInput("Birth Date:", birthDatePicker.getDatePicker()),
-            createInput("Death Date:", deathDatePicker.getDatePicker())
+            createInput("Death Date:", deathDatePicker.getDatePicker()),
+            createInput("Notes:", notesTextArea)
         );
 
         lastNameTextField.setText(familyTreeDTO.getName());
@@ -97,6 +106,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
             familyTreeMemberDTO.setLastName(lastNameTextField.getText());
             familyTreeMemberDTO.setBirthDate(birthDatePicker.getDate());
             familyTreeMemberDTO.setDeathDate(deathDatePicker.getDate());
+            familyTreeMemberDTO.setNotes(notesTextArea.getText());
 
             return familyTreeMemberDTO;
         } else {
