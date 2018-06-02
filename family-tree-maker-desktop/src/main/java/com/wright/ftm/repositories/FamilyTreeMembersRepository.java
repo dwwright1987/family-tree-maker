@@ -19,6 +19,9 @@ public class FamilyTreeMembersRepository {
         if (familyTreeMemberDTO.getDeathDate() != null) {
             statementBuilder.append(", DEATH_DATE");
         }
+        if (familyTreeMemberDTO.getNotes() != null) {
+            statementBuilder.append(", NOTES");
+        }
         statementBuilder.append(") VALUES (");
         statementBuilder.append(familyTreeMemberDTO.getFamilyTreeId());
         statementBuilder.append(", ").append(familyTreeMemberDTO.getSex().ordinal());
@@ -28,6 +31,9 @@ public class FamilyTreeMembersRepository {
         statementBuilder.append(", '").append(familyTreeMemberDTO.getBirthDate()).append("'");
         if (familyTreeMemberDTO.getDeathDate() != null) {
             statementBuilder.append(", '").append(familyTreeMemberDTO.getDeathDate()).append("'");
+        }
+        if (familyTreeMemberDTO.getNotes() != null) {
+            statementBuilder.append(", '").append(familyTreeMemberDTO.getNotes()).append("'");
         }
         statementBuilder.append(")");
 

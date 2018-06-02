@@ -48,6 +48,8 @@ class FamilyTreeMembersMapperTest {
         String expectedMiddleName1 = "Woolf";
         String expectedLastName1 = "Wright";
         String expectedLastName2 = "wright";
+        String expectedNotes1 = "some notes";
+        String expectedNotes2 = null;
 
         calendar.set(1987, Calendar.SEPTEMBER, 1);
         Date expectedBirthDate1 = new Date(calendar.getTimeInMillis());
@@ -69,6 +71,7 @@ class FamilyTreeMembersMapperTest {
         when(mockResultSet.getString("LAST_NAME")).thenReturn(expectedLastName1, expectedLastName2);
         when(mockResultSet.getDate("BIRTH_DATE")).thenReturn(expectedBirthDate1, expectedBirthDate2);
         when(mockResultSet.getDate("DEATH_DATE")).thenReturn(expectedDeathDate1, expectedDeathDate2);
+        when(mockResultSet.getString("NOTES")).thenReturn(expectedNotes1, expectedNotes2);
 
         List<FamilyTreeMemberDTO> familyTreeMemberDTOs = classToTest.map(mockResultSet);
 
@@ -83,6 +86,7 @@ class FamilyTreeMembersMapperTest {
         assertEquals(expectedLastName1, familyTreeMemberDTO1.getLastName());
         assertEquals(expectedBirthDate1, familyTreeMemberDTO1.getBirthDate());
         assertEquals(expectedDeathDate1, familyTreeMemberDTO1.getDeathDate());
+        assertEquals(expectedNotes1, familyTreeMemberDTO1.getNotes());
 
         FamilyTreeMemberDTO familyTreeMemberDTO2 = familyTreeMemberDTOs.get(1);
         assertEquals(expectedId2, familyTreeMemberDTO2.getId());
@@ -93,6 +97,7 @@ class FamilyTreeMembersMapperTest {
         assertEquals(expectedLastName2, familyTreeMemberDTO2.getLastName());
         assertEquals(expectedBirthDate2, familyTreeMemberDTO2.getBirthDate());
         assertEquals(expectedDeathDate2, familyTreeMemberDTO2.getDeathDate());
+        assertEquals(expectedNotes2, familyTreeMemberDTO2.getNotes());
     }
 
     @Test

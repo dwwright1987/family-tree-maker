@@ -47,6 +47,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
         expectedFamilyTreeMemberDTO.setMiddleName("Woolf");
         expectedFamilyTreeMemberDTO.setLastName("Wright");
         expectedFamilyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
+        expectedFamilyTreeMemberDTO.setNotes("some notes about this particular family member");
 
         FamilyTreeMemberDTO actualFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(expectedFamilyTreeMemberDTO, familyTreeDTO);
         assertTrue(actualFamilyTreeMemberDTO.getId() > 0);
@@ -62,6 +63,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(expectedFamilyTreeMemberDTO.getLastName(), actualFamilyTreeMemberDTO.getLastName());
         assertEquals(expectedFamilyTreeMemberDTO.getBirthDate().toString(), actualFamilyTreeMemberDTO.getBirthDate().toString());
         assertNull(expectedFamilyTreeMemberDTO.getDeathDate());
+        assertEquals(expectedFamilyTreeMemberDTO.getNotes(), actualFamilyTreeMemberDTO.getNotes());
     }
 
     @Test
@@ -89,6 +91,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(expectedFamilyTreeMemberDTO.getLastName(), actualFamilyTreeMemberDTO.getLastName());
         assertEquals(expectedFamilyTreeMemberDTO.getBirthDate().toString(), actualFamilyTreeMemberDTO.getBirthDate().toString());
         assertNull(expectedFamilyTreeMemberDTO.getDeathDate());
+        assertNull(expectedFamilyTreeMemberDTO.getNotes());
     }
 
     @Test
@@ -121,5 +124,6 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(expectedFamilyTreeMemberDTO.getLastName(), actualFamilyTreeMemberDTO.getLastName());
         assertEquals(expectedFamilyTreeMemberDTO.getBirthDate().toString(), actualFamilyTreeMemberDTO.getBirthDate().toString());
         assertEquals(expectedFamilyTreeMemberDTO.getDeathDate().toString(), actualFamilyTreeMemberDTO.getDeathDate().toString());
+        assertNull(expectedFamilyTreeMemberDTO.getNotes());
     }
 }

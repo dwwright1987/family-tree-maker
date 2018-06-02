@@ -40,6 +40,7 @@ class FamilyTreeMembersRepositoryTest {
         familyTreeMemberDTO.setFirstName("Daniel");
         familyTreeMemberDTO.setMiddleName("Woolf");
         familyTreeMemberDTO.setLastName("Wright");
+        familyTreeMemberDTO.setNotes("some notes");
 
         calendar.set(1987, Calendar.SEPTEMBER, 1);
         familyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
@@ -48,14 +49,15 @@ class FamilyTreeMembersRepositoryTest {
         familyTreeMemberDTO.setDeathDate(new Date(calendar.getTimeInMillis()));
 
         int expectedId = 30;
-        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE, DEATH_DATE) VALUES (" +
+        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE, DEATH_DATE, NOTES) VALUES (" +
             familyTreeMemberDTO.getFamilyTreeId() + ", " +
             familyTreeMemberDTO.getSex().ordinal() + ", " +
             "'" + familyTreeMemberDTO.getFirstName() + "', " +
             "'" + familyTreeMemberDTO.getMiddleName() + "', " +
             "'" + familyTreeMemberDTO.getLastName() + "', " +
             "'" + familyTreeMemberDTO.getBirthDate() + "', " +
-            "'" + familyTreeMemberDTO.getDeathDate() + "'" +
+            "'" + familyTreeMemberDTO.getDeathDate() + "', " +
+            "'" + familyTreeMemberDTO.getNotes() + "'" +
         ")";
 
         when(mockDbManager.insert(expectedStatement)).thenReturn(expectedId);
@@ -64,7 +66,7 @@ class FamilyTreeMembersRepositoryTest {
     }
 
     @Test
-    void testCreateFamilyMemberHandlesNullDeathDate() throws Exception {
+    void testCreateFamilyMemberHandlesOptionalsColumns() throws Exception {
         Calendar calendar = new GregorianCalendar();
 
         FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();

@@ -27,6 +27,7 @@ public class FamilyTreeMembersMapper {
                 familyTreeMemberDTO.setLastName(resultSet.getString("LAST_NAME"));
                 familyTreeMemberDTO.setBirthDate(resultSet.getDate("BIRTH_DATE"));
                 familyTreeMemberDTO.setDeathDate(resultSet.getDate("DEATH_DATE"));
+                familyTreeMemberDTO.setNotes(resultSet.getString("NOTES"));
 
                 familyTreeMemberDTOs.add(familyTreeMemberDTO);
             }

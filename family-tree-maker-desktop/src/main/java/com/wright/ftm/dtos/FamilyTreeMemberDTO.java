@@ -12,6 +12,7 @@ public class FamilyTreeMemberDTO {
     private String lastName;
     private String middleName = "";
     private Sex sex;
+    private String notes;
 
     public void setFamilyTree(FamilyTreeDTO familyTree) {
         this.familyTree = familyTree;
@@ -84,6 +85,14 @@ public class FamilyTreeMemberDTO {
         } else {
             this.middleName = middleName;
         }
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Sex getSex() {
