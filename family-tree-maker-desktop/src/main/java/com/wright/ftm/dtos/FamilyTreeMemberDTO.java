@@ -1,5 +1,7 @@
 package com.wright.ftm.dtos;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.sql.Date;
 
 public class FamilyTreeMemberDTO {
@@ -21,6 +23,18 @@ public class FamilyTreeMemberDTO {
         } else {
             familyTreeId = familyTree.getId();
         }
+    }
+
+    public String getFullName() {
+        String fullName = firstName + " ";
+
+        if (StringUtils.isNotEmpty(middleName)) {
+            fullName += middleName + " ";
+        }
+
+        fullName += lastName;
+
+        return fullName;
     }
 
     public Date getBirthDate() {

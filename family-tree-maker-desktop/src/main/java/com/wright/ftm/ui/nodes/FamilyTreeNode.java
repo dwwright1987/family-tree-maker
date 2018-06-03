@@ -4,6 +4,7 @@ import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.dtos.FamilyTreeMemberDTO;
 import com.wright.ftm.services.FamilyTreeMembersService;
 import com.wright.ftm.ui.alerts.WarningAlert;
+import com.wright.ftm.ui.controls.FamilyTreeMemberNode;
 import com.wright.ftm.ui.dialogs.AddFamilyMemberDialog;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,20 +12,23 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.wright.ftm.Constants.DEFAULT_PADDING;
 import static javafx.scene.paint.Color.WHITE;
 
 public class FamilyTreeNode {
-    private VBox familyTreeBox;
+    private VBox familyTreeBox = new VBox();
     private FamilyTreeMembersService familyTreeMembersService = new FamilyTreeMembersService();
+    private GridPane familyTreePane = createFamilyTreePane(familyTreeBox);
     private FamilyTreeDTO selectedFamilyTreeDTO;
 
     public VBox build() {
-        familyTreeBox = new VBox();
         familyTreeBox.setAlignment(Pos.CENTER);
         familyTreeBox.setPadding(new Insets(DEFAULT_PADDING));
         familyTreeBox.setSpacing(DEFAULT_PADDING);
-        familyTreeBox.getChildren().addAll(createFamilyTreePane(familyTreeBox), createAddFamilyMemberButton());
+        familyTreeBox.getChildren().addAll(familyTreePane, createAddFamilyMemberButton());
         familyTreeBox.setVisible(false);
 
         return familyTreeBox;
@@ -34,6 +38,8 @@ public class FamilyTreeNode {
         GridPane gridPane = new GridPane();
         gridPane.prefHeightProperty().bind(parent.heightProperty());
         gridPane.prefWidthProperty().bind(parent.widthProperty());
+        gridPane.setPadding(new Insets(DEFAULT_PADDING));
+        gridPane.setHgap(DEFAULT_PADDING);
         gridPane.setBackground(new Background(new BackgroundFill(WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         gridPane.setBorder(new Border(new BorderStroke(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID , BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT, Insets.EMPTY)));
 
@@ -57,8 +63,22 @@ public class FamilyTreeNode {
         });
     }
 
+    private List<FamilyTreeMemberNode> createFamilyTreeMemberNodes(FamilyTreeDTO familyTreeDTO) {
+        return getFamilyTreeMembers(familyTreeDTO).stream().map(FamilyTreeMemberNode::new).collect(Collectors.toList());
+    }
+
+    private List<FamilyTreeMemberDTO> getFamilyTreeMembers(FamilyTreeDTO familyTreeDTO) {
+        return familyTreeMembersService.getFamilyMembers(familyTreeDTO);
+    }
+
     public void setSelectedFamilyTreeDTO(FamilyTreeDTO familyTreeDTO) {
         selectedFamilyTreeDTO = familyTreeDTO;
+
+        List<FamilyTreeMemberNode> familyTreeMemberNodes = createFamilyTreeMemberNodes(familyTreeDTO);
+
+        familyTreePane.getChildren().clear();
+        familyTreePane.add(familyTreeMemberNodes.get(0), 0, 0);
+        familyTreePane.add(familyTreeMemberNodes.get(1), 1, 0);
     }
 
     public void setVisible(boolean visible) {

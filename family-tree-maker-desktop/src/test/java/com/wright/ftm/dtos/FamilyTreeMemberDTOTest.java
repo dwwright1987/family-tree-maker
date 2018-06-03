@@ -51,4 +51,25 @@ class FamilyTreeMemberDTOTest {
 
         assertEquals(0, classToTest.getMiddleName().length());
     }
+
+    @Test
+    void testGetFullNameWhenThereIsAMiddleName() throws Exception {
+        classToTest.setFirstName("Daniel");
+        classToTest.setMiddleName("Woolf");
+        classToTest.setLastName("Wright");
+
+        String expectedFullName = classToTest.getFirstName() + " " + classToTest.getMiddleName() + " " + classToTest.getLastName();
+
+        assertEquals(expectedFullName, classToTest.getFullName());
+    }
+
+    @Test
+    void testGetFullNameWhenThereIsNoMiddleName() throws Exception {
+        classToTest.setFirstName("Daniel");
+        classToTest.setLastName("Wright");
+
+        String expectedFullName = classToTest.getFirstName() + " " + classToTest.getLastName();
+
+        assertEquals(expectedFullName, classToTest.getFullName());
+    }
 }
