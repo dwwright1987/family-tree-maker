@@ -64,7 +64,7 @@ public class FamilyTreeNode {
     }
 
     private List<FamilyTreeMemberNode> createFamilyTreeMemberNodes(FamilyTreeDTO familyTreeDTO) {
-        return getFamilyTreeMembers(familyTreeDTO).stream().map(FamilyTreeMemberNode::new).collect(Collectors.toList());
+        return getFamilyTreeMembers(familyTreeDTO).stream().map((FamilyTreeMemberDTO familyTreeMemberDTO) -> new FamilyTreeMemberNode(familyTreeMemberDTO, familyTreeDTO)).collect(Collectors.toList());
     }
 
     private List<FamilyTreeMemberDTO> getFamilyTreeMembers(FamilyTreeDTO familyTreeDTO) {
