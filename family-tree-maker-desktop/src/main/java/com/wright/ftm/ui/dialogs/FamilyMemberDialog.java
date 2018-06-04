@@ -21,7 +21,7 @@ import static com.wright.ftm.Constants.DEFAULT_PADDING;
 import static com.wright.ftm.dtos.Sex.FEMALE;
 import static com.wright.ftm.dtos.Sex.MALE;
 
-public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implements FamilyTreeMakerControlEvenHandler {
+public class FamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implements FamilyTreeMakerControlEvenHandler {
     private static final String FEMALE_SEX_OPTION = "Female";
     private static final String MALE_SEX_OPTION = "Male";
     private FamilyTreeMakerDatePicker birthDatePicker = new FamilyTreeMakerDatePicker(true, this);
@@ -32,19 +32,22 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
     private TextArea notesTextArea = buildNotesTextArea();
     private ComboBox sexOptions = new ComboBox(FXCollections.observableArrayList(FEMALE_SEX_OPTION, MALE_SEX_OPTION));
     private double width = 290;
+    private FamilyTreeMemberDTO existingFamilyTreeMemberDTO;
 
-    public AddFamilyMemberDialog(FamilyTreeDTO familyTreeDTO) {
+    public FamilyMemberDialog(FamilyTreeMemberDTO existingFamilyTreeMemberDTO, FamilyTreeDTO familyTreeDTO) {
+        this.existingFamilyTreeMemberDTO = existingFamilyTreeMemberDTO;
+
         setHeight(435);
         setWidth(width);
-        setTitle("Add Family Member");
-        setDialogPane(buildPane(familyTreeDTO));
+        setTitle(this.existingFamilyTreeMemberDTO == null ? "Add Family Member" : "Modify Family Member");
+        setDialogPane(buildPane(existingFamilyTreeMemberDTO, familyTreeDTO));
         setResultConverter(this::handleClose);
 
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
         GraphicsUtils.addAppIcon(stage);
         UiLocationUtils.center(stage);
 
-        setOkButtonDisabled(true);
+        onFamilyTreeMakerControlEvent();
     }
 
     private TextArea buildNotesTextArea() {
@@ -54,7 +57,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
         return textArea;
     }
 
-    private DialogPane buildPane(FamilyTreeDTO familyTreeDTO) {
+    private DialogPane buildPane(FamilyTreeMemberDTO familyTreeMemberDTO, FamilyTreeDTO familyTreeDTO) {
         VBox inputs = new VBox();
         inputs.getChildren().addAll(
             createSexInput(),
@@ -66,7 +69,20 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
             createInput("Notes:", notesTextArea)
         );
 
-        lastNameTextField.setText(familyTreeDTO.getName());
+        if (familyTreeMemberDTO == null) {
+            lastNameTextField.setText(familyTreeDTO.getName());
+        } else {
+            if (familyTreeMemberDTO.getSex() == FEMALE) {
+                sexOptions.getSelectionModel().select(FEMALE_SEX_OPTION);
+            } else {
+                sexOptions.getSelectionModel().select(MALE_SEX_OPTION);
+            }
+            firstNameTextField.setText(familyTreeMemberDTO.getFirstName());
+            middleNameTextField.setText(familyTreeMemberDTO.getMiddleName());
+            lastNameTextField.setText(familyTreeMemberDTO.getLastName());
+            birthDatePicker.setDate(familyTreeMemberDTO.getBirthDate());
+            deathDatePicker.setDate(familyTreeMemberDTO.getDeathDate());
+        }
 
         DialogPane dialogPane = new DialogPane();
         dialogPane.setPrefHeight(getHeight());
@@ -99,7 +115,7 @@ public class AddFamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implement
 
     private FamilyTreeMemberDTO handleClose(ButtonType response) {
         if (response == ButtonType.OK) {
-            FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
+            FamilyTreeMemberDTO familyTreeMemberDTO = existingFamilyTreeMemberDTO == null ? new FamilyTreeMemberDTO() : existingFamilyTreeMemberDTO;
             familyTreeMemberDTO.setSex(determineSex());
             familyTreeMemberDTO.setFirstName(firstNameTextField.getText());
             familyTreeMemberDTO.setMiddleName(middleNameTextField.getText());

@@ -5,7 +5,7 @@ import com.wright.ftm.dtos.FamilyTreeMemberDTO;
 import com.wright.ftm.services.FamilyTreeMembersService;
 import com.wright.ftm.ui.alerts.WarningAlert;
 import com.wright.ftm.ui.controls.FamilyTreeMemberNode;
-import com.wright.ftm.ui.dialogs.AddFamilyMemberDialog;
+import com.wright.ftm.ui.dialogs.FamilyMemberDialog;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -48,14 +48,14 @@ public class FamilyTreeNode {
 
     private Button createAddFamilyMemberButton() {
         Button addFamilyMemberButton = new Button("Add Family Member");
-        addFamilyMemberButton.setOnMouseClicked(event -> addFamilyMemberDialog());
+        addFamilyMemberButton.setOnMouseClicked(event -> showFamilyMemberDialog());
 
         return addFamilyMemberButton;
     }
 
-    private void addFamilyMemberDialog() {
-        AddFamilyMemberDialog addFamilyMemberDialog = new AddFamilyMemberDialog(selectedFamilyTreeDTO);
-        addFamilyMemberDialog.showAndWait().ifPresent(familyTreeMemberDTO -> {
+    private void showFamilyMemberDialog() {
+        FamilyMemberDialog familyMemberDialog = new FamilyMemberDialog(null, selectedFamilyTreeDTO);
+        familyMemberDialog.showAndWait().ifPresent(familyTreeMemberDTO -> {
             FamilyTreeMemberDTO createdFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(familyTreeMemberDTO, selectedFamilyTreeDTO);
             if (createdFamilyTreeMemberDTO == null) {
                 WarningAlert.show("Could not create family member");

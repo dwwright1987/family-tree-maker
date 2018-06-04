@@ -2,6 +2,7 @@ package com.wright.ftm.utils;
 
 import org.junit.jupiter.api.Test;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Calendar;
 
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DateUtilsTest {
     @Test
-    void getGetSqlDateReturnsSqlDateForLocaDate() throws Exception {
+    void testGetGetSqlDateReturnsSqlDateForLocalDate() throws Exception {
         int expectedYear = 1987;
         int expectedMonth = 9;
         int expectedDay = 1;
@@ -26,7 +27,30 @@ class DateUtilsTest {
     }
 
     @Test
-    void getSqlDateReturnsNullForNullLocalDate() throws Exception {
+    void testGetSqlDateReturnsNullForNullLocalDate() throws Exception {
         assertNull(DateUtils.getSqlDate(null));
+    }
+
+    @Test
+    void testGetLocalDateReturnLocalDateForSqlDate() throws Exception {
+        int expectedYear = 1987;
+        int expectedMonth = Calendar.SEPTEMBER;
+        int expectedDay = 1;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(expectedYear, expectedMonth, expectedDay);
+
+        Date sqlDate = new Date(calendar.getTimeInMillis());
+
+        LocalDate localDate = DateUtils.getLocalDate(sqlDate);
+
+        assertEquals(expectedYear, localDate.getYear());
+        assertEquals(expectedMonth, localDate.getMonth().getValue() - 1);
+        assertEquals(expectedDay, localDate.getDayOfMonth());
+    }
+
+    @Test
+    void testGetLocalDateReturnsNullForNullSqlDate() throws Exception {
+        assertNull(DateUtils.getLocalDate(null));
     }
 }

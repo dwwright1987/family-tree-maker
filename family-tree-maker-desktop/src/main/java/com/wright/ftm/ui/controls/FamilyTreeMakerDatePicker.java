@@ -32,4 +32,9 @@ public class FamilyTreeMakerDatePicker extends FamilyTreeMakerControl {
     public Date getDate() {
         return DateUtils.getSqlDate(datePicker.getValue());
     }
+
+    public void setDate(Date date) {
+        datePicker.setValue(DateUtils.getLocalDate(date));
+        updateBorder(datePicker);
+    }
 }
