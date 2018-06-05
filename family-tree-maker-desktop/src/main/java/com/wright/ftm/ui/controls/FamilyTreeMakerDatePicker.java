@@ -14,6 +14,7 @@ public class FamilyTreeMakerDatePicker extends FamilyTreeMakerControl {
 
     private DatePicker createDatePicker() {
         DatePicker datePicker = new DatePicker();
+        datePicker.setPromptText("m/d/yyyy");
         datePicker.setOnAction(event -> onControlAction(datePicker));
 
         updateBorder(datePicker);
