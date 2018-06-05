@@ -19,6 +19,7 @@ import static com.wright.ftm.Constants.DEFAULT_PADDING;
 import static javafx.scene.paint.Color.WHITE;
 
 public class FamilyTreeNode {
+    private Button addFirstFamilyMemberButton = createAddFirstFamilyMemberButton();
     private VBox familyTreeBox = new VBox();
     private FamilyTreeMembersService familyTreeMembersService = new FamilyTreeMembersService();
     private GridPane familyTreePane = createFamilyTreePane(familyTreeBox);
@@ -28,7 +29,7 @@ public class FamilyTreeNode {
         familyTreeBox.setAlignment(Pos.CENTER);
         familyTreeBox.setPadding(new Insets(DEFAULT_PADDING));
         familyTreeBox.setSpacing(DEFAULT_PADDING);
-        familyTreeBox.getChildren().addAll(familyTreePane, createAddFamilyMemberButton());
+        familyTreeBox.getChildren().addAll(familyTreePane, addFirstFamilyMemberButton);
         familyTreeBox.setVisible(false);
 
         return familyTreeBox;
@@ -46,8 +47,8 @@ public class FamilyTreeNode {
         return gridPane;
     }
 
-    private Button createAddFamilyMemberButton() {
-        Button addFamilyMemberButton = new Button("Add Family Member");
+    private Button createAddFirstFamilyMemberButton() {
+        Button addFamilyMemberButton = new Button("Add First Family Member");
         addFamilyMemberButton.setOnMouseClicked(event -> showFamilyMemberDialog());
 
         return addFamilyMemberButton;
@@ -79,6 +80,8 @@ public class FamilyTreeNode {
         familyTreePane.getChildren().clear();
         familyTreePane.add(familyTreeMemberNodes.get(0), 0, 0);
         familyTreePane.add(familyTreeMemberNodes.get(1), 1, 0);
+
+        addFirstFamilyMemberButton.setDisable(familyTreeMemberNodes.size() > 0);
     }
 
     public void setVisible(boolean visible) {
