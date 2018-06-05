@@ -55,11 +55,12 @@ public class FamilyTreeMemberNode extends Label {
 
     private void showFamilyMemberDialog() {
         FamilyMemberDialog familyMemberDialog = new FamilyMemberDialog(familyTreeMemberDTO, familyTreeDTO);
-        familyMemberDialog.showAndWait().ifPresent(familyTreeMemberDTO -> {
-            FamilyTreeMemberDTO createdFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(familyTreeMemberDTO, familyTreeDTO);
-            if (createdFamilyTreeMemberDTO == null) {
-                WarningAlert.show("Could not update family member");
-            }
+        familyMemberDialog.showAndWait().ifPresent(ftmDTO -> {
+//            familyTreeMemberDTO = ftmDTO; // Only do if update is successful
+//            FamilyTreeMemberDTO createdFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(familyTreeMemberDTO, familyTreeDTO);
+//            if (createdFamilyTreeMemberDTO == null) {
+//                WarningAlert.show("Could not update family member");
+//            }
         });
     }
 }
