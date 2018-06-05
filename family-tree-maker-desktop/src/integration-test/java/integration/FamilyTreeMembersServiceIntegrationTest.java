@@ -45,7 +45,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
         expectedFamilyTreeMemberDTO.setSex(MALE);
         expectedFamilyTreeMemberDTO.setFirstName("Daniel");
         expectedFamilyTreeMemberDTO.setMiddleName("Woolf");
-        expectedFamilyTreeMemberDTO.setLastName("Wright");
+        expectedFamilyTreeMemberDTO.setLastName(familyTreeDTO.getName());
         expectedFamilyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
         expectedFamilyTreeMemberDTO.setNotes("some notes about this particular family member");
 
@@ -74,7 +74,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
         FamilyTreeMemberDTO expectedFamilyTreeMemberDTO = new FamilyTreeMemberDTO();
         expectedFamilyTreeMemberDTO.setSex(FEMALE);
         expectedFamilyTreeMemberDTO.setFirstName("Laura");
-        expectedFamilyTreeMemberDTO.setLastName("Wright");
+        expectedFamilyTreeMemberDTO.setLastName(familyTreeDTO.getName());
         expectedFamilyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
 
         FamilyTreeMemberDTO actualFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(expectedFamilyTreeMemberDTO, familyTreeDTO);
@@ -102,7 +102,7 @@ public class FamilyTreeMembersServiceIntegrationTest {
         expectedFamilyTreeMemberDTO.setSex(MALE);
         expectedFamilyTreeMemberDTO.setFirstName("Daniel");
         expectedFamilyTreeMemberDTO.setMiddleName("Woolf");
-        expectedFamilyTreeMemberDTO.setLastName("Wright");
+        expectedFamilyTreeMemberDTO.setLastName(familyTreeDTO.getName());
 
         calendar.set(1987, Calendar.SEPTEMBER, 1);
         expectedFamilyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
@@ -125,5 +125,30 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(expectedFamilyTreeMemberDTO.getBirthDate().toString(), actualFamilyTreeMemberDTO.getBirthDate().toString());
         assertEquals(expectedFamilyTreeMemberDTO.getDeathDate().toString(), actualFamilyTreeMemberDTO.getDeathDate().toString());
         assertNull(expectedFamilyTreeMemberDTO.getNotes());
+    }
+
+    @Test
+    void testCanUpdateFamilyMember() throws Exception {
+        FamilyTreeMemberDTO expectedFamilyTreeMemberDTO = new FamilyTreeMemberDTO();
+        expectedFamilyTreeMemberDTO.setSex(MALE);
+        expectedFamilyTreeMemberDTO.setFirstName("Daniel");
+        expectedFamilyTreeMemberDTO.setLastName(familyTreeDTO.getName());
+        expectedFamilyTreeMemberDTO.setBirthDate(new Date(Calendar.getInstance().getTimeInMillis()));
+
+        FamilyTreeMemberDTO actualFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(expectedFamilyTreeMemberDTO, familyTreeDTO);
+        actualFamilyTreeMemberDTO.setMiddleName("Woolf");
+
+        assertTrue(familyTreeMembersService.updateFamilyMember(actualFamilyTreeMemberDTO));
+
+        List<FamilyTreeMemberDTO> familyTreeMemberDTOs = familyTreeMembersService.getFamilyMembers(familyTreeDTO);
+        assertEquals(1, familyTreeMemberDTOs.size());
+
+        actualFamilyTreeMemberDTO = familyTreeMemberDTOs.get(0);
+        assertEquals(familyTreeDTO.getName(), actualFamilyTreeMemberDTO.getFamilyTree().getName());
+        assertEquals(expectedFamilyTreeMemberDTO.getSex(), actualFamilyTreeMemberDTO.getSex());
+        assertEquals(expectedFamilyTreeMemberDTO.getFirstName(), actualFamilyTreeMemberDTO.getFirstName());
+        assertEquals(expectedFamilyTreeMemberDTO.getMiddleName(), actualFamilyTreeMemberDTO.getMiddleName());
+        assertEquals(expectedFamilyTreeMemberDTO.getLastName(), actualFamilyTreeMemberDTO.getLastName());
+        assertEquals(expectedFamilyTreeMemberDTO.getBirthDate().toString(), actualFamilyTreeMemberDTO.getBirthDate().toString());
     }
 }

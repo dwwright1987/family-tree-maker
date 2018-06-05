@@ -85,4 +85,16 @@ public class FamilyTreeMembersServiceTest {
 
         assertTrue(classToTest.getFamilyMembers(familyTreeDTO).isEmpty());
     }
+
+    @Test
+    void testUpdateFamilyMemberReturnsTrueWhenUpdateSucceeds() throws Exception {
+        assertTrue(classToTest.updateFamilyMember(familyTreeMemberDTO));
+    }
+
+    @Test
+    void testUpdateFamilyMemberReturnsFalseWhenUpdateFails() throws Exception {
+        doThrow(new SQLException()).when(mockFamilyTreeMembersRepository).updateFamilyMember(familyTreeMemberDTO);
+
+        assertFalse(classToTest.updateFamilyMember(familyTreeMemberDTO));
+    }
 }

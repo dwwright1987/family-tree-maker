@@ -46,6 +46,28 @@ public class FamilyTreeMembersRepository {
         return familyTreeMembersMapper.map(resultSet);
     }
 
+    public void updateFamilyMember(FamilyTreeMemberDTO familyTreeMemberDTO) throws SQLException {
+        StringBuilder statementBuilder = new StringBuilder();
+        statementBuilder.append("UPDATE ").append(FAMILY_TREE_MEMBERS_TABLE_NAME).append(" SET ");
+        statementBuilder.append("FAMILY_TREE_ID=").append(familyTreeMemberDTO.getFamilyTreeId()).append(", ");
+        statementBuilder.append("SEX=").append(familyTreeMemberDTO.getSex().ordinal()).append(", ");
+        statementBuilder.append("FIRST_NAME='").append(familyTreeMemberDTO.getFirstName()).append("', ");
+        statementBuilder.append("MIDDLE_NAME='").append(familyTreeMemberDTO.getMiddleName()).append("', ");
+        statementBuilder.append("LAST_NAME='").append(familyTreeMemberDTO.getLastName()).append("', ");
+        statementBuilder.append("BIRTH_DATE='").append(familyTreeMemberDTO.getBirthDate()).append("', ");
+        statementBuilder.append("DEATH_DATE=").append(getUpdateValue(familyTreeMemberDTO.getDeathDate())).append(", ");
+        statementBuilder.append("NOTES=").append(getUpdateValue(familyTreeMemberDTO.getNotes())).append(" ");
+//        statementBuilder.append("DEATH_DATE='").append(familyTreeMemberDTO.getDeathDate()).append("', ");
+//        statementBuilder.append("NOTES='").append(familyTreeMemberDTO.getNotes()).append("' ");
+        statementBuilder.append("WHERE ID=").append(familyTreeMemberDTO.getId());
+
+        dbManager.update(statementBuilder.toString());
+    }
+
+    private Object getUpdateValue(Object value) {
+        return value == null ? "NULL" : "'" + value + "'";
+    }
+
     void setDbManager(DbManager dbManager) {
         this.dbManager = dbManager;
     }

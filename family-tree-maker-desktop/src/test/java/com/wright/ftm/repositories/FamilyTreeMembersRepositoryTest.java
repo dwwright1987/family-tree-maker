@@ -16,6 +16,7 @@ import java.util.List;
 import static com.wright.ftm.dtos.Sex.MALE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class FamilyTreeMembersRepositoryTest {
@@ -106,5 +107,71 @@ class FamilyTreeMembersRepositoryTest {
         when(mockFamilyTreeMembersMapper.map(mockResultSet)).thenReturn(expectedFamilyTreeMemberDTOs);
 
         assertEquals(expectedFamilyTreeMemberDTOs, classToTest.getFamilyMembers(expectedFamilyTreeId));
+    }
+
+    @Test
+    void testUpdateFamilyMemberUpdatesFamilyMember() throws Exception {
+        Calendar calendar = new GregorianCalendar();
+
+        FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
+        familyTreeMemberDTO.setId(30);
+        familyTreeMemberDTO.setFamilyTreeId(29);
+        familyTreeMemberDTO.setSex(MALE);
+        familyTreeMemberDTO.setFirstName("Daniel");
+        familyTreeMemberDTO.setMiddleName("Woolf");
+        familyTreeMemberDTO.setLastName("Wright");
+        familyTreeMemberDTO.setNotes("some notes");
+
+        calendar.set(1987, Calendar.SEPTEMBER, 1);
+        familyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
+
+        calendar.set(2077, Calendar.AUGUST, 14);
+        familyTreeMemberDTO.setDeathDate(new Date(calendar.getTimeInMillis()));
+
+        String expectedStatement = "UPDATE FAMILY_TREE_MEMBERS SET " +
+            "FAMILY_TREE_ID=" + familyTreeMemberDTO.getFamilyTreeId() + ", " +
+            "SEX=" + familyTreeMemberDTO.getSex().ordinal() + ", " +
+            "FIRST_NAME='" + familyTreeMemberDTO.getFirstName() + "', " +
+            "MIDDLE_NAME='" + familyTreeMemberDTO.getMiddleName() + "', " +
+            "LAST_NAME='" + familyTreeMemberDTO.getLastName() + "', " +
+            "BIRTH_DATE='" + familyTreeMemberDTO.getBirthDate() + "', " +
+            "DEATH_DATE='" + familyTreeMemberDTO.getDeathDate() + "', " +
+            "NOTES='" + familyTreeMemberDTO.getNotes() + "' " +
+            "WHERE ID=" + familyTreeMemberDTO.getId();
+
+        classToTest.updateFamilyMember(familyTreeMemberDTO);
+
+        verify(mockDbManager).update(expectedStatement);
+    }
+
+    @Test
+    void testUpdateFamilyMemberHandlesOptionalColumns() throws Exception {
+        Calendar calendar = new GregorianCalendar();
+
+        FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
+        familyTreeMemberDTO.setId(30);
+        familyTreeMemberDTO.setFamilyTreeId(29);
+        familyTreeMemberDTO.setSex(MALE);
+        familyTreeMemberDTO.setFirstName("Daniel");
+        familyTreeMemberDTO.setMiddleName("Woolf");
+        familyTreeMemberDTO.setLastName("Wright");
+
+        calendar.set(1987, Calendar.SEPTEMBER, 1);
+        familyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
+
+        String expectedStatement = "UPDATE FAMILY_TREE_MEMBERS SET " +
+                "FAMILY_TREE_ID=" + familyTreeMemberDTO.getFamilyTreeId() + ", " +
+                "SEX=" + familyTreeMemberDTO.getSex().ordinal() + ", " +
+                "FIRST_NAME='" + familyTreeMemberDTO.getFirstName() + "', " +
+                "MIDDLE_NAME='" + familyTreeMemberDTO.getMiddleName() + "', " +
+                "LAST_NAME='" + familyTreeMemberDTO.getLastName() + "', " +
+                "BIRTH_DATE='" + familyTreeMemberDTO.getBirthDate() + "', " +
+                "DEATH_DATE=NULL, " +
+                "NOTES=NULL " +
+                "WHERE ID=" + familyTreeMemberDTO.getId();
+
+        classToTest.updateFamilyMember(familyTreeMemberDTO);
+
+        verify(mockDbManager).update(expectedStatement);
     }
 }

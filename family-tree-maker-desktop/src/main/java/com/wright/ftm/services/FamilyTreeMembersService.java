@@ -46,6 +46,18 @@ public class FamilyTreeMembersService {
         }
     }
 
+    public boolean updateFamilyMember(FamilyTreeMemberDTO familyTreeMemberDTO) {
+        try {
+            logger.info("Updating " + familyTreeMemberDTO.getFullName() + "...");
+            familyTreeMembersRepository.updateFamilyMember(familyTreeMemberDTO);
+            logger.info("Updated " + familyTreeMemberDTO.getFullName());
+            return true;
+        } catch (SQLException e) {
+            logger.info("Error updating " + familyTreeMemberDTO.getFullName() + ": " + e.getMessage());
+            return false;
+        }
+    }
+
     void setFamilyTreeMembersRepository(FamilyTreeMembersRepository familyTreeMembersRepository) {
         this.familyTreeMembersRepository = familyTreeMembersRepository;
     }
