@@ -78,10 +78,15 @@ public class FamilyTreeNode {
         List<FamilyTreeMemberNode> familyTreeMemberNodes = createFamilyTreeMemberNodes(familyTreeDTO);
 
         familyTreePane.getChildren().clear();
-        familyTreePane.add(familyTreeMemberNodes.get(0), 0, 0);
-        familyTreePane.add(familyTreeMemberNodes.get(1), 1, 0);
 
-        addFirstFamilyMemberButton.setDisable(familyTreeMemberNodes.size() > 0);
+        if (familyTreeMemberNodes.size() > 0) {
+            familyTreePane.add(familyTreeMemberNodes.get(0), 0, 0);
+            familyTreePane.add(familyTreeMemberNodes.get(1), 1, 0);
+            addFirstFamilyMemberButton.setDisable(true);
+        } else {
+            addFirstFamilyMemberButton.setDisable(false);
+
+        }
     }
 
     public void setVisible(boolean visible) {
