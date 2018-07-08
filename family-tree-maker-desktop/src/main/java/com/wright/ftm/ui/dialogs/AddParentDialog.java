@@ -1,6 +1,10 @@
 package com.wright.ftm.ui.dialogs;
 
 import com.wright.ftm.Constants;
+import com.wright.ftm.dtos.FamilyTreeDTO;
+import com.wright.ftm.dtos.FamilyTreeMemberDTO;
+import com.wright.ftm.services.FamilyTreeMembersService;
+import com.wright.ftm.ui.alerts.WarningAlert;
 import com.wright.ftm.ui.utils.GraphicsUtils;
 import com.wright.ftm.ui.utils.UiLocationUtils;
 import javafx.geometry.Insets;
@@ -13,8 +17,12 @@ import javafx.stage.Stage;
 
 public class AddParentDialog extends Dialog<Object> {
     private static final int BUTTON_WIDTH = 155;
+    private FamilyTreeMembersService familyTreeMembersService = new FamilyTreeMembersService();
+    private FamilyTreeDTO familyTreeDTO;
 
-    public AddParentDialog() {
+    public AddParentDialog(FamilyTreeDTO familyTreeDTO) {
+        this.familyTreeDTO = familyTreeDTO;
+
         setTitle("Add Parent");
         setHeight(115);
         setWidth(BUTTON_WIDTH + Constants.DEFAULT_PADDING * 2);
@@ -55,6 +63,20 @@ public class AddParentDialog extends Dialog<Object> {
     private Button createCreateNewParentButton() {
         Button button = new Button("Create New Parent");
         button.setMinWidth(BUTTON_WIDTH);
+        button.setOnMouseClicked(event -> showFamilyMemberDialog());
+
         return button;
+    }
+
+    private void showFamilyMemberDialog() {
+        close();
+
+        FamilyMemberDialog familyMemberDialog = new FamilyMemberDialog(null, familyTreeDTO);
+        familyMemberDialog.showAndWait().ifPresent(familyTreeMemberDTO -> {
+            FamilyTreeMemberDTO createdFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(familyTreeMemberDTO, familyTreeDTO);
+            if (createdFamilyTreeMemberDTO == null) {
+                WarningAlert.show("Could not create parent");
+            }
+        });
     }
 }
