@@ -4,11 +4,13 @@ import com.wright.ftm.dtos.FamilyTreeDTO;
 import com.wright.ftm.dtos.FamilyTreeMemberDTO;
 import com.wright.ftm.services.FamilyTreeMembersService;
 import com.wright.ftm.ui.alerts.WarningAlert;
+import com.wright.ftm.ui.dialogs.AddParentDialog;
 import com.wright.ftm.ui.dialogs.FamilyMemberDialog;
 import javafx.geometry.Insets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -42,6 +44,8 @@ public class FamilyTreeMemberNode extends Label {
     private ContextMenu createContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().add(createModifyContextMenuItem());
+        contextMenu.getItems().add(new SeparatorMenuItem());
+        contextMenu.getItems().add(createAddParentContextMenuItem());
 
         return  contextMenu;
     }
@@ -53,14 +57,26 @@ public class FamilyTreeMemberNode extends Label {
         return menuItem;
     }
 
+    private MenuItem createAddParentContextMenuItem() {
+        MenuItem menuItem = new MenuItem("Add Parent");
+        menuItem.setOnAction(event -> showAddParentDialog());
+
+        return menuItem;
+    }
+
     private void showFamilyMemberDialog() {
         FamilyMemberDialog familyMemberDialog = new FamilyMemberDialog(familyTreeMemberDTO, familyTreeDTO);
         familyMemberDialog.showAndWait().ifPresent(ftmDTO -> {
             if (familyTreeMembersService.updateFamilyMember(ftmDTO)) {
                 familyTreeMemberDTO = ftmDTO;
             } else {
-                WarningAlert.show("Could not update family member");
+                WarningAlert.show("Could not create/update family member");
             }
         });
+    }
+
+    private void showAddParentDialog() {
+        AddParentDialog addParentDialog = new AddParentDialog();
+        addParentDialog.showAndWait();
     }
 }
