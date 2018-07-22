@@ -76,7 +76,7 @@ public class FamilyTreeMemberNode extends Label {
     }
 
     private void showAddParentDialog() {
-        AddParentDialog addParentDialog = new AddParentDialog(familyTreeDTO);
+        AddParentDialog addParentDialog = new AddParentDialog(familyTreeDTO, familyTreeMemberDTO);
         addParentDialog.showAndWait();
     }
 }

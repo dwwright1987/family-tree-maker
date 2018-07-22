@@ -20,7 +20,7 @@ public class AddParentDialog extends Dialog<Object> {
     private FamilyTreeMembersService familyTreeMembersService = new FamilyTreeMembersService();
     private FamilyTreeDTO familyTreeDTO;
 
-    public AddParentDialog(FamilyTreeDTO familyTreeDTO) {
+    public AddParentDialog(FamilyTreeDTO familyTreeDTO, FamilyTreeMemberDTO child) {
         this.familyTreeDTO = familyTreeDTO;
 
         setTitle("Add Parent");
@@ -69,8 +69,6 @@ public class AddParentDialog extends Dialog<Object> {
     }
 
     private void showFamilyMemberDialog() {
-        close();
-
         FamilyMemberDialog familyMemberDialog = new FamilyMemberDialog(null, familyTreeDTO);
         familyMemberDialog.showAndWait().ifPresent(familyTreeMemberDTO -> {
             FamilyTreeMemberDTO createdFamilyTreeMemberDTO = familyTreeMembersService.createFamilyMember(familyTreeMemberDTO, familyTreeDTO);

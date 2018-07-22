@@ -72,21 +72,29 @@ public class FamilyTreeNode {
         return familyTreeMembersService.getFamilyMembers(familyTreeDTO);
     }
 
-    public void setSelectedFamilyTreeDTO(FamilyTreeDTO familyTreeDTO) {
-        selectedFamilyTreeDTO = familyTreeDTO;
-
-        List<FamilyTreeMemberNode> familyTreeMemberNodes = createFamilyTreeMemberNodes(familyTreeDTO);
+    private void refreshFamilyTree() {
+        List<FamilyTreeMemberNode> familyTreeMemberNodes = createFamilyTreeMemberNodes(selectedFamilyTreeDTO);
 
         familyTreePane.getChildren().clear();
 
         if (familyTreeMemberNodes.size() > 0) {
-            familyTreePane.add(familyTreeMemberNodes.get(0), 0, 0);
-            familyTreePane.add(familyTreeMemberNodes.get(1), 1, 0);
+            showFamilyTree(familyTreeMemberNodes);
             addFirstFamilyMemberButton.setDisable(true);
         } else {
             addFirstFamilyMemberButton.setDisable(false);
 
         }
+    }
+
+    private void showFamilyTree(List<FamilyTreeMemberNode> familyTreeMemberNodes) {
+        for (int i = 0; i < familyTreeMemberNodes.size(); i++) {
+            familyTreePane.add(familyTreeMemberNodes.get(i), i, 0);
+        }
+    }
+
+    public void setSelectedFamilyTreeDTO(FamilyTreeDTO familyTreeDTO) {
+        selectedFamilyTreeDTO = familyTreeDTO;
+        refreshFamilyTree();
     }
 
     public void setVisible(boolean visible) {
