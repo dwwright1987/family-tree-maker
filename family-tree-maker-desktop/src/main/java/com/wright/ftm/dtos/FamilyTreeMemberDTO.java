@@ -3,6 +3,10 @@ package com.wright.ftm.dtos;
 import org.apache.commons.lang.StringUtils;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FamilyTreeMemberDTO {
     private Date birthDate;
@@ -13,8 +17,10 @@ public class FamilyTreeMemberDTO {
     private int id;
     private String lastName;
     private String middleName = "";
-    private Sex sex;
     private String notes;
+    private List<FamilyTreeMemberDTO> parents = new ArrayList<>();
+    private List<String> parentIds = new ArrayList<>();
+    private Sex sex;
 
     public void setFamilyTree(FamilyTreeDTO familyTree) {
         this.familyTree = familyTree;
@@ -107,6 +113,30 @@ public class FamilyTreeMemberDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public void addParent(FamilyTreeMemberDTO parent) {
+        parents.add(parent);
+        parentIds.clear();
+    }
+
+    public List<FamilyTreeMemberDTO> getParents() {
+        return parents;
+    }
+
+    public String getParentIds() {
+        if (parentIds.size() > 0) {
+            return StringUtils.join(parentIds, ",");
+        } else {
+            List<String> pIds = parents.stream().map(p -> Integer.toString(p.getId())).collect(Collectors.toList());
+            return String.join(",", pIds);
+        }
+    }
+
+    public void setParentIds(String parentIdsString) {
+        if (parentIdsString != null) {
+            parentIds.addAll(Arrays.asList(parentIdsString.split(",")));
+        }
     }
 
     public Sex getSex() {

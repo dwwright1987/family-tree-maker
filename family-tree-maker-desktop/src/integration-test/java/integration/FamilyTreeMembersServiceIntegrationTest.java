@@ -151,4 +151,51 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(expectedFamilyTreeMemberDTO.getLastName(), actualFamilyTreeMemberDTO.getLastName());
         assertEquals(expectedFamilyTreeMemberDTO.getBirthDate().toString(), actualFamilyTreeMemberDTO.getBirthDate().toString());
     }
+
+    @Test
+    void testCanCreateFamilyMemberWithParents() throws Exception {
+        //TODO: Automatically add child when parent is being created for?
+        //TODO: Test that parents can be added after the fact
+        FamilyTreeMemberDTO expectedParent1 = new FamilyTreeMemberDTO();
+        expectedParent1.setSex(MALE);
+        expectedParent1.setFirstName("Stephen");
+        expectedParent1.setLastName(familyTreeDTO.getName());
+        expectedParent1.setBirthDate(new Date(Calendar.getInstance().getTimeInMillis()));
+
+        FamilyTreeMemberDTO expectedParent2 = new FamilyTreeMemberDTO();
+        expectedParent2.setSex(FEMALE);
+        expectedParent2.setFirstName("Esther");
+        expectedParent2.setLastName(familyTreeDTO.getName());
+        expectedParent2.setBirthDate(new Date(Calendar.getInstance().getTimeInMillis()));
+
+        FamilyTreeMemberDTO expectedChild = new FamilyTreeMemberDTO();
+        expectedChild.setSex(MALE);
+        expectedChild.setFirstName("Daniel");
+        expectedChild.setLastName(familyTreeDTO.getName());
+        expectedChild.setBirthDate(new Date(Calendar.getInstance().getTimeInMillis()));
+        expectedChild.addParent(expectedParent1);
+        expectedChild.addParent(expectedParent2);
+
+       familyTreeMembersService.createFamilyMember(expectedParent1, familyTreeDTO);
+       familyTreeMembersService.createFamilyMember(expectedParent2, familyTreeDTO);
+       familyTreeMembersService.createFamilyMember(expectedChild, familyTreeDTO);
+
+        List<FamilyTreeMemberDTO> familyTreeMemberDTOs = familyTreeMembersService.getFamilyMembers(familyTreeDTO);
+        assertEquals(3, familyTreeMemberDTOs.size());
+
+        FamilyTreeMemberDTO actualChild = findFamilyMember(expectedChild.getFirstName(), familyTreeMemberDTOs);
+        assertEquals(2, actualChild.getParents().size());
+        assertEquals(expectedParent1.getFirstName(), actualChild.getParents().get(0).getFirstName());
+        assertEquals(expectedParent2.getFirstName(), actualChild.getParents().get(1).getFirstName());
+    }
+
+    private FamilyTreeMemberDTO findFamilyMember(String firstName, List<FamilyTreeMemberDTO> familyTreeMemberDTOs) {
+        for (FamilyTreeMemberDTO familyTreeMemberDTO : familyTreeMemberDTOs) {
+            if (firstName.equals(familyTreeMemberDTO.getFirstName())) {
+                return familyTreeMemberDTO;
+            }
+        }
+
+        return null;
+    }
 }

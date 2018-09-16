@@ -3,8 +3,12 @@ package com.wright.ftm.dtos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FamilyTreeMemberDTOTest {
     private FamilyTreeMemberDTO classToTest;
@@ -71,5 +75,26 @@ class FamilyTreeMemberDTOTest {
         String expectedFullName = classToTest.getFirstName() + " " + classToTest.getLastName();
 
         assertEquals(expectedFullName, classToTest.getFullName());
+    }
+
+    @Test
+    void testParentsIsEmptyBeDefault() throws Exception {
+        assertTrue(classToTest.getParents().isEmpty());
+    }
+
+    @Test
+    void testGetParentIdsReturnsCommaSeparatedStringOfParentIds() throws Exception {
+        FamilyTreeMemberDTO parent1 = new FamilyTreeMemberDTO();
+        parent1.setId(1);
+
+        FamilyTreeMemberDTO parent2 = new FamilyTreeMemberDTO();
+        parent2.setId(2);
+
+        classToTest.addParent(parent1);
+        classToTest.addParent(parent2);
+
+        List<String> expectedParentIds = classToTest.getParents().stream().map(parent -> Integer.toString(parent.getId())).collect(Collectors.toList());
+
+        assertEquals(String.join(",", expectedParentIds), classToTest.getParentIds());
     }
 }
