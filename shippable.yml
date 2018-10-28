@@ -1,8 +1,7 @@
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk10
 build:
-  pre_ci_boot:
   ci:
     - mvn -version
     - mvn clean verify
