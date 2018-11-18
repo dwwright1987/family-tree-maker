@@ -37,7 +37,7 @@ public class FamilyMemberDialog extends Dialog<FamilyTreeMemberDTO> implements F
     public FamilyMemberDialog(FamilyTreeMemberDTO existingFamilyTreeMemberDTO, FamilyTreeDTO familyTreeDTO) {
         this.existingFamilyTreeMemberDTO = existingFamilyTreeMemberDTO;
 
-        setHeight(435);
+        setHeight(475);
         setWidth(width);
         setTitle(this.existingFamilyTreeMemberDTO == null ? "Add Family Member" : "Modify Family Member");
         setDialogPane(buildPane(existingFamilyTreeMemberDTO, familyTreeDTO));

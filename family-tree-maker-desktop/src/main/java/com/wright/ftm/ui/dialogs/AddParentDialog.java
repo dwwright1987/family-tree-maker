@@ -24,7 +24,7 @@ public class AddParentDialog extends Dialog<Object> {
         this.familyTreeDTO = familyTreeDTO;
 
         setTitle("Add Parent");
-        setHeight(115);
+        setHeight(155);
         setWidth(BUTTON_WIDTH + Constants.DEFAULT_PADDING * 2);
         setDialogPane(buildPane());
         setResultConverter(this::handleClose);
