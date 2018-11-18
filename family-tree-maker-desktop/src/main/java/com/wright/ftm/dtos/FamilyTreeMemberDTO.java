@@ -139,6 +139,10 @@ public class FamilyTreeMemberDTO {
         }
     }
 
+    public List<FamilyTreeMemberDTO> getChildren() {
+        return null;
+    }
+
     public Sex getSex() {
         return sex;
     }

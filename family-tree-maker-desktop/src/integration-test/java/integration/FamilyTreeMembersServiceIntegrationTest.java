@@ -168,8 +168,14 @@ public class FamilyTreeMembersServiceIntegrationTest {
 
         FamilyTreeMemberDTO actualChild = findFamilyMember(danielWright.getFirstName(), familyTreeMemberDTOs);
         assertEquals(2, actualChild.getParents().size());
-        assertEquals(stephenWright.getFirstName(), actualChild.getParents().get(0).getFirstName());
-        assertEquals(estherWright.getFirstName(), actualChild.getParents().get(1).getFirstName());
+
+        FamilyTreeMemberDTO actualParent1 = findFamilyMember(stephenWright.getFirstName(), actualChild.getParents());
+        assertEquals(1, actualParent1.getChildren());
+        assertEquals(danielWright.getFullName(), actualParent1.getChildren().get(0).getFullName());
+
+        FamilyTreeMemberDTO actualParent2 = findFamilyMember(estherWright.getFirstName(), actualChild.getParents());
+        assertEquals(1, actualParent2.getChildren());
+        assertEquals(danielWright.getFullName(), actualParent2.getChildren().get(0).getFullName());
     }
 
     @Test
@@ -189,8 +195,14 @@ public class FamilyTreeMembersServiceIntegrationTest {
         familyTreeMemberDTOs = familyTreeMembersService.getFamilyMembers(familyTreeDTO);
         actualChild = findFamilyMember(danielWright.getFirstName(), familyTreeMemberDTOs);
         assertEquals(2, actualChild.getParents().size());
-        assertEquals(stephenWright.getFirstName(), actualChild.getParents().get(0).getFirstName());
-        assertEquals(estherWright.getFirstName(), actualChild.getParents().get(1).getFirstName());
+
+        FamilyTreeMemberDTO actualParent1 = findFamilyMember(stephenWright.getFirstName(), actualChild.getParents());
+        assertEquals(1, actualParent1.getChildren());
+        assertEquals(danielWright.getFullName(), actualParent1.getChildren().get(0).getFullName());
+
+        FamilyTreeMemberDTO actualParent2 = findFamilyMember(estherWright.getFirstName(), actualChild.getParents());
+        assertEquals(1, actualParent2.getChildren());
+        assertEquals(danielWright.getFullName(), actualParent2.getChildren().get(0).getFullName());
     }
 
     private FamilyTreeMemberDTO findFamilyMember(String firstName, List<FamilyTreeMemberDTO> familyTreeMemberDTOs) {
