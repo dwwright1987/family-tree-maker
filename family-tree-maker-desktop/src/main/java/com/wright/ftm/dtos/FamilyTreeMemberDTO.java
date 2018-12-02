@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 public class FamilyTreeMemberDTO {
     private Date birthDate;
+    private List<FamilyTreeMemberDTO> children = new ArrayList<>();
+    private List<String> childIds = new ArrayList<>();
     private Date deathDate;
     private FamilyTreeDTO familyTree;
     private int familyTreeId;
@@ -116,8 +118,13 @@ public class FamilyTreeMemberDTO {
     }
 
     public void addParent(FamilyTreeMemberDTO parent) {
-        parents.add(parent);
-        parentIds.clear();
+        List<FamilyTreeMemberDTO> matchingParents = parents.stream().filter(p -> p.getId() == parent.getId()).collect(Collectors.toList());
+        if (parent != null && matchingParents.isEmpty()) {
+            parents.add(parent);
+            parentIds.clear();
+
+            parent.addChild(this);
+        }
     }
 
     public List<FamilyTreeMemberDTO> getParents() {
@@ -133,14 +140,39 @@ public class FamilyTreeMemberDTO {
         }
     }
 
+    public void addChild(FamilyTreeMemberDTO child) {
+        List<FamilyTreeMemberDTO> matchingChildren = children.stream().filter(c -> c.getId() == child.getId()).collect(Collectors.toList());
+        if (child != null && matchingChildren.isEmpty()) {
+            children.add(child);
+            childIds.clear();
+
+            child.addParent(this);
+        }
+    }
+
     public void setParentIds(String parentIdsString) {
         if (parentIdsString != null) {
             parentIds.addAll(Arrays.asList(parentIdsString.split(",")));
         }
     }
 
+    public void setChildIds(String childIdsString) {
+        if (childIdsString != null) {
+            childIds.addAll(Arrays.asList(childIdsString.split(",")));
+        }
+    }
+
+    public String getChildIds() {
+        if (childIds.size() > 0) {
+            return StringUtils.join(childIds, ",");
+        } else {
+            List<String> cIds = children.stream().map(c -> Integer.toString(c.getId())).collect(Collectors.toList());
+            return String.join(",", cIds);
+        }
+    }
+
     public List<FamilyTreeMemberDTO> getChildren() {
-        return null;
+        return children;
     }
 
     public Sex getSex() {

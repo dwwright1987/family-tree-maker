@@ -26,6 +26,9 @@ public class FamilyTreeMembersRepository {
         if (!familyTreeMemberDTO.getParents().isEmpty()) {
             statementBuilder.append(", PARENT_IDS");
         }
+        if (!familyTreeMemberDTO.getChildren().isEmpty()) {
+            statementBuilder.append(", CHILD_IDS");
+        }
         statementBuilder.append(") VALUES (");
         statementBuilder.append(familyTreeMemberDTO.getFamilyTreeId());
         statementBuilder.append(", ").append(familyTreeMemberDTO.getSex().ordinal());
@@ -42,6 +45,9 @@ public class FamilyTreeMembersRepository {
         if (!familyTreeMemberDTO.getParents().isEmpty()) {
             statementBuilder.append(", '").append(familyTreeMemberDTO.getParentIds()).append("'");
         }
+        if (!familyTreeMemberDTO.getChildren().isEmpty()) {
+            statementBuilder.append(", '").append(familyTreeMemberDTO.getChildIds()).append("'");
+        }
         statementBuilder.append(")");
 
         return dbManager.insert(statementBuilder.toString());
@@ -54,6 +60,7 @@ public class FamilyTreeMembersRepository {
         List<FamilyTreeMemberDTO> familyTreeMemberDTOS = familyTreeMembersMapper.map(resultSet);
         for (FamilyTreeMemberDTO familyTreeMemberDTO : familyTreeMemberDTOS) {
             populateParentsOnFamilyMember(familyTreeMemberDTO);
+            populateChildrenOnFamilyMember(familyTreeMemberDTO);
         }
 
         return familyTreeMemberDTOS;
@@ -70,7 +77,8 @@ public class FamilyTreeMembersRepository {
         statementBuilder.append("BIRTH_DATE='").append(familyTreeMemberDTO.getBirthDate()).append("', ");
         statementBuilder.append("DEATH_DATE=").append(getUpdateValue(familyTreeMemberDTO.getDeathDate())).append(", ");
         statementBuilder.append("NOTES=").append(getUpdateValue(familyTreeMemberDTO.getNotes())).append(", ");
-        statementBuilder.append("PARENT_IDS='").append(familyTreeMemberDTO.getParentIds()).append("' ");
+        statementBuilder.append("PARENT_IDS='").append(familyTreeMemberDTO.getParentIds()).append("', ");
+        statementBuilder.append("CHILD_IDS='").append(familyTreeMemberDTO.getChildIds()).append("' ");
         statementBuilder.append("WHERE ID=").append(familyTreeMemberDTO.getId());
 
         dbManager.update(statementBuilder.toString());
@@ -98,6 +106,18 @@ public class FamilyTreeMembersRepository {
                 FamilyTreeMemberDTO parent = getFamilyTreeMember(Integer.parseInt(parentId));
                 if (parent != null) {
                     familyTreeMemberDTO.addParent(parent);
+                }
+            }
+        }
+    }
+
+    private void populateChildrenOnFamilyMember(FamilyTreeMemberDTO familyTreeMemberDTO) throws SQLException {
+        String childIds = familyTreeMemberDTO.getChildIds();
+        if (StringUtils.isNotBlank(childIds)) {
+            for (String childId : childIds.split(",")) {
+                FamilyTreeMemberDTO child = getFamilyTreeMember(Integer.parseInt(childId));
+                if (child != null) {
+                    familyTreeMemberDTO.addChild(child);
                 }
             }
         }

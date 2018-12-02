@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FamilyTreeMemberDTOTest {
     private FamilyTreeMemberDTO classToTest;
@@ -78,7 +76,7 @@ class FamilyTreeMemberDTOTest {
     }
 
     @Test
-    void testParentsIsEmptyBeDefault() throws Exception {
+    void testParentsIsEmptyByDefault() throws Exception {
         assertTrue(classToTest.getParents().isEmpty());
     }
 
@@ -96,5 +94,87 @@ class FamilyTreeMemberDTOTest {
         List<String> expectedParentIds = classToTest.getParents().stream().map(parent -> Integer.toString(parent.getId())).collect(Collectors.toList());
 
         assertEquals(String.join(",", expectedParentIds), classToTest.getParentIds());
+    }
+
+    @Test
+    void testChildrenIsEmptyByDefault() throws Exception {
+        assertTrue(classToTest.getChildren().isEmpty());
+    }
+
+    @Test
+    void testGetChildIdsReturnsCommaSeparatedStringOfChildIds() throws Exception {
+        FamilyTreeMemberDTO child1 = new FamilyTreeMemberDTO();
+        child1.setId(1);
+
+        FamilyTreeMemberDTO child2 = new FamilyTreeMemberDTO();
+        child2.setId(2);
+
+        classToTest.addChild(child1);
+        classToTest.addChild(child2);
+
+        List<String> expectedChildIds = classToTest.getChildren().stream().map(child -> Integer.toString(child.getId())).collect(Collectors.toList());
+
+        assertEquals(String.join(",", expectedChildIds), classToTest.getChildIds());
+    }
+
+    @Test
+    void testAddingParentAddsFamilyMemberAsChild() throws Exception {
+        FamilyTreeMemberDTO child = new FamilyTreeMemberDTO();
+        child.setId(1);
+        FamilyTreeMemberDTO parent = new FamilyTreeMemberDTO();
+        parent.setId(2);
+
+        child.addParent(parent);
+
+        List<FamilyTreeMemberDTO> children = parent.getChildren();
+        assertEquals(1, children.size());
+        assertEquals(child.getId(), children.get(0).getId());
+    }
+
+    @Test
+    void testAddingChildAddsFamilyMemberAsParent() throws Exception {
+        FamilyTreeMemberDTO child = new FamilyTreeMemberDTO();
+        child.setId(1);
+        FamilyTreeMemberDTO parent = new FamilyTreeMemberDTO();
+        parent.setId(2);
+
+        parent.addChild(child);
+
+        List<FamilyTreeMemberDTO> parents = child.getParents();
+        assertEquals(1, parents.size());
+        assertEquals(parent.getId(), parents.get(0).getId());
+    }
+
+    @Test
+    void testParentsAndChildrenDoNotGetDuplicated() throws Exception {
+        FamilyTreeMemberDTO child = new FamilyTreeMemberDTO();
+        child.setId(1);
+        FamilyTreeMemberDTO parent = new FamilyTreeMemberDTO();
+        parent.setId(2);
+
+        child.addParent(parent);
+        child.addParent(parent);
+
+        List<FamilyTreeMemberDTO> parents = child.getParents();
+        assertEquals(1, parents.size());
+        assertEquals(parent.getId(), parents.get(0).getId());
+
+        List<FamilyTreeMemberDTO> children = parent.getChildren();
+        assertEquals(1, children.size());
+        assertEquals(child.getId(), children.get(0).getId());
+    }
+
+    @Test
+    void testBadChildrenAndParentsAreNotAdded() throws Exception {
+        FamilyTreeMemberDTO child = new FamilyTreeMemberDTO();
+        child.setId(1);
+        FamilyTreeMemberDTO parent = new FamilyTreeMemberDTO();
+        parent.setId(2);
+
+        child.addParent(null);
+        assertTrue(child.getParents().isEmpty());
+
+        parent.addChild(null);
+        assertTrue(parent.getChildren().isEmpty());
     }
 }

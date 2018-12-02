@@ -155,12 +155,12 @@ public class FamilyTreeMembersServiceIntegrationTest {
 
     @Test
     void testCanCreateFamilyMemberWithParents() throws Exception {
-        //TODO: Automatically add child when parent is being created for?
+        familyTreeMembersService.createFamilyMember(stephenWright, familyTreeDTO);
+        familyTreeMembersService.createFamilyMember(estherWright, familyTreeDTO);
+
         danielWright.addParent(stephenWright);
         danielWright.addParent(estherWright);
 
-       familyTreeMembersService.createFamilyMember(stephenWright, familyTreeDTO);
-       familyTreeMembersService.createFamilyMember(estherWright, familyTreeDTO);
        familyTreeMembersService.createFamilyMember(danielWright, familyTreeDTO);
 
         List<FamilyTreeMemberDTO> familyTreeMemberDTOs = familyTreeMembersService.getFamilyMembers(familyTreeDTO);
@@ -170,11 +170,11 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(2, actualChild.getParents().size());
 
         FamilyTreeMemberDTO actualParent1 = findFamilyMember(stephenWright.getFirstName(), actualChild.getParents());
-        assertEquals(1, actualParent1.getChildren());
+        assertEquals(1, actualParent1.getChildren().size());
         assertEquals(danielWright.getFullName(), actualParent1.getChildren().get(0).getFullName());
 
         FamilyTreeMemberDTO actualParent2 = findFamilyMember(estherWright.getFirstName(), actualChild.getParents());
-        assertEquals(1, actualParent2.getChildren());
+        assertEquals(1, actualParent2.getChildren().size());
         assertEquals(danielWright.getFullName(), actualParent2.getChildren().get(0).getFullName());
     }
 
@@ -197,11 +197,11 @@ public class FamilyTreeMembersServiceIntegrationTest {
         assertEquals(2, actualChild.getParents().size());
 
         FamilyTreeMemberDTO actualParent1 = findFamilyMember(stephenWright.getFirstName(), actualChild.getParents());
-        assertEquals(1, actualParent1.getChildren());
+        assertEquals(1, actualParent1.getChildren().size());
         assertEquals(danielWright.getFullName(), actualParent1.getChildren().get(0).getFullName());
 
         FamilyTreeMemberDTO actualParent2 = findFamilyMember(estherWright.getFirstName(), actualChild.getParents());
-        assertEquals(1, actualParent2.getChildren());
+        assertEquals(1, actualParent2.getChildren().size());
         assertEquals(danielWright.getFullName(), actualParent2.getChildren().get(0).getFullName());
     }
 

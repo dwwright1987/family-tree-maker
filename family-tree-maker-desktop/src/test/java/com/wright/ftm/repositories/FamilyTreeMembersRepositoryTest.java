@@ -36,6 +36,12 @@ class FamilyTreeMembersRepositoryTest {
         FamilyTreeMemberDTO parent2 = new FamilyTreeMemberDTO();
         parent2.setId(2);
 
+        FamilyTreeMemberDTO child1 = new FamilyTreeMemberDTO();
+        child1.setId(3);
+
+        FamilyTreeMemberDTO child2 = new FamilyTreeMemberDTO();
+        child2.setId(4);
+
         FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
         familyTreeMemberDTO.setFamilyTreeId(29);
         familyTreeMemberDTO.setSex(MALE);
@@ -45,6 +51,8 @@ class FamilyTreeMembersRepositoryTest {
         familyTreeMemberDTO.setNotes("some notes");
         familyTreeMemberDTO.addParent(parent1);
         familyTreeMemberDTO.addParent(parent2);
+        familyTreeMemberDTO.addChild(child1);
+        familyTreeMemberDTO.addChild(child2);
 
         calendar.set(1987, Calendar.SEPTEMBER, 1);
         familyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
@@ -53,7 +61,7 @@ class FamilyTreeMembersRepositoryTest {
         familyTreeMemberDTO.setDeathDate(new Date(calendar.getTimeInMillis()));
 
         int expectedId = 30;
-        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE, DEATH_DATE, NOTES, PARENT_IDS) VALUES (" +
+        String expectedStatement = "INSERT INTO FAMILY_TREE_MEMBERS (FAMILY_TREE_ID, SEX, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE, DEATH_DATE, NOTES, PARENT_IDS, CHILD_IDS) VALUES (" +
             familyTreeMemberDTO.getFamilyTreeId() + ", " +
             familyTreeMemberDTO.getSex().ordinal() + ", " +
             "'" + familyTreeMemberDTO.getFirstName() + "', " +
@@ -62,7 +70,8 @@ class FamilyTreeMembersRepositoryTest {
             "'" + familyTreeMemberDTO.getBirthDate() + "', " +
             "'" + familyTreeMemberDTO.getDeathDate() + "', " +
             "'" + familyTreeMemberDTO.getNotes() + "', " +
-            "'" + familyTreeMemberDTO.getParentIds() + "'" +
+            "'" + familyTreeMemberDTO.getParentIds() + "', " +
+            "'" + familyTreeMemberDTO.getChildIds() + "'" +
         ")";
 
         when(mockDbManager.insert(expectedStatement)).thenReturn(expectedId);
@@ -133,8 +142,8 @@ class FamilyTreeMembersRepositoryTest {
         ResultSet mockParent2ResultSet = mock(ResultSet.class);
 
         when(mockDbManager.query(expectedFamilyTreeStatement)).thenReturn(mockFamilyTreeResultSet);
-        when(mockDbManager.query(expectedFamilyMemberBaseStatement + Integer.toString(expectedParent1.getId()))).thenReturn(mockParent1ResultSet);
-        when(mockDbManager.query(expectedFamilyMemberBaseStatement + Integer.toString(expectedParent2.getId()))).thenReturn(mockParent2ResultSet);
+        when(mockDbManager.query(expectedFamilyMemberBaseStatement + expectedParent1.getId())).thenReturn(mockParent1ResultSet);
+        when(mockDbManager.query(expectedFamilyMemberBaseStatement + expectedParent2.getId())).thenReturn(mockParent2ResultSet);
         when(mockFamilyTreeMembersMapper.map(mockFamilyTreeResultSet)).thenReturn(Collections.singletonList(expectedFamilyTreeMemberDTO));
         when(mockFamilyTreeMembersMapper.map(mockParent1ResultSet)).thenReturn(Collections.singletonList(expectedParent1));
         when(mockFamilyTreeMembersMapper.map(mockParent2ResultSet)).thenReturn(Collections.singletonList(expectedParent2));
@@ -165,7 +174,7 @@ class FamilyTreeMembersRepositoryTest {
         ResultSet mockParent1ResultSet = mock(ResultSet.class);
 
         when(mockDbManager.query(expectedFamilyTreeStatement)).thenReturn(mockFamilyTreeResultSet);
-        when(mockDbManager.query(expectedFamilyMemberBaseStatement + Integer.toString(expectedParent1.getId()))).thenReturn(mockParent1ResultSet);
+        when(mockDbManager.query(expectedFamilyMemberBaseStatement + expectedParent1.getId())).thenReturn(mockParent1ResultSet);
         when(mockFamilyTreeMembersMapper.map(mockFamilyTreeResultSet)).thenReturn(Collections.singletonList(expectedFamilyTreeMemberDTO));
         when(mockFamilyTreeMembersMapper.map(mockParent1ResultSet)).thenReturn(Collections.emptyList());
 
@@ -181,6 +190,9 @@ class FamilyTreeMembersRepositoryTest {
         FamilyTreeMemberDTO parent = new FamilyTreeMemberDTO();
         parent.setId(1);
 
+        FamilyTreeMemberDTO child = new FamilyTreeMemberDTO();
+        child.setId(2);
+
         FamilyTreeMemberDTO familyTreeMemberDTO = new FamilyTreeMemberDTO();
         familyTreeMemberDTO.setId(30);
         familyTreeMemberDTO.setFamilyTreeId(29);
@@ -190,6 +202,7 @@ class FamilyTreeMembersRepositoryTest {
         familyTreeMemberDTO.setLastName("Wright");
         familyTreeMemberDTO.setNotes("some notes");
         familyTreeMemberDTO.addParent(parent);
+        familyTreeMemberDTO.addChild(child);
 
         calendar.set(1987, Calendar.SEPTEMBER, 1);
         familyTreeMemberDTO.setBirthDate(new Date(calendar.getTimeInMillis()));
@@ -206,7 +219,8 @@ class FamilyTreeMembersRepositoryTest {
             "BIRTH_DATE='" + familyTreeMemberDTO.getBirthDate() + "', " +
             "DEATH_DATE='" + familyTreeMemberDTO.getDeathDate() + "', " +
             "NOTES='" + familyTreeMemberDTO.getNotes() + "', " +
-            "PARENT_IDS='" + familyTreeMemberDTO.getParentIds() + "' " +
+            "PARENT_IDS='" + familyTreeMemberDTO.getParentIds() + "', " +
+            "CHILD_IDS='" + familyTreeMemberDTO.getChildIds() + "' " +
             "WHERE ID=" + familyTreeMemberDTO.getId();
 
         classToTest.updateFamilyMember(familyTreeMemberDTO);
@@ -238,11 +252,73 @@ class FamilyTreeMembersRepositoryTest {
                 "BIRTH_DATE='" + familyTreeMemberDTO.getBirthDate() + "', " +
                 "DEATH_DATE=NULL, " +
                 "NOTES=NULL, " +
-                "PARENT_IDS='' " +
+                "PARENT_IDS='', " +
+                "CHILD_IDS='' " +
                 "WHERE ID=" + familyTreeMemberDTO.getId();
 
         classToTest.updateFamilyMember(familyTreeMemberDTO);
 
         verify(mockDbManager).update(expectedStatement);
+    }
+
+    @Test
+    void testPopulatesChildrenWhenGettingFamilyTreeMembers() throws Exception {
+        FamilyTreeMemberDTO expectedChild1 = new FamilyTreeMemberDTO();
+        expectedChild1.setId(1);
+        FamilyTreeMemberDTO expectedChild2 = new FamilyTreeMemberDTO();
+        expectedChild2.setId(2);
+
+        FamilyTreeMemberDTO expectedFamilyTreeMemberDTO = new FamilyTreeMemberDTO();
+        expectedFamilyTreeMemberDTO.setId(3);
+        expectedFamilyTreeMemberDTO.setChildIds(String.join(",", Arrays.asList(Integer.toString(expectedChild1.getId()), Integer.toString(expectedChild2.getId()))));
+
+        int expectedFamilyTreeId = 2;
+        String expectedFamilyTreeStatement = "SELECT * FROM FAMILY_TREE_MEMBERS WHERE FAMILY_TREE_ID = " + expectedFamilyTreeId;
+        String expectedFamilyMemberBaseStatement = "SELECT * FROM FAMILY_TREE_MEMBERS WHERE ID = ";
+
+        ResultSet mockFamilyTreeResultSet = mock(ResultSet.class);
+        ResultSet mockChild1ResultSet = mock(ResultSet.class);
+        ResultSet mockChild2ResultSet = mock(ResultSet.class);
+
+        when(mockDbManager.query(expectedFamilyTreeStatement)).thenReturn(mockFamilyTreeResultSet);
+        when(mockDbManager.query(expectedFamilyMemberBaseStatement + expectedChild1.getId())).thenReturn(mockChild1ResultSet);
+        when(mockDbManager.query(expectedFamilyMemberBaseStatement + expectedChild2.getId())).thenReturn(mockChild2ResultSet);
+        when(mockFamilyTreeMembersMapper.map(mockFamilyTreeResultSet)).thenReturn(Collections.singletonList(expectedFamilyTreeMemberDTO));
+        when(mockFamilyTreeMembersMapper.map(mockChild1ResultSet)).thenReturn(Collections.singletonList(expectedChild1));
+        when(mockFamilyTreeMembersMapper.map(mockChild2ResultSet)).thenReturn(Collections.singletonList(expectedChild2));
+
+        FamilyTreeMemberDTO actualFamilyTreeMemberDTO = classToTest.getFamilyMembers(expectedFamilyTreeId).get(0);
+
+        assertEquals(2, actualFamilyTreeMemberDTO.getChildren().size());
+        assertEquals(expectedChild1.getId(), actualFamilyTreeMemberDTO.getChildren().get(0).getId());
+        assertEquals(0, actualFamilyTreeMemberDTO.getChildren().get(0).getChildren().size());
+        assertEquals(expectedChild2.getId(), actualFamilyTreeMemberDTO.getChildren().get(1).getId());
+        assertEquals(0, actualFamilyTreeMemberDTO.getChildren().get(1).getChildren().size());
+    }
+
+    @Test
+    void testHandlesNotMatchingChild() throws Exception {
+        FamilyTreeMemberDTO expectedChild = new FamilyTreeMemberDTO();
+        expectedChild.setId(1);
+
+        FamilyTreeMemberDTO expectedFamilyTreeMemberDTO = new FamilyTreeMemberDTO();
+        expectedFamilyTreeMemberDTO.setId(3);
+        expectedFamilyTreeMemberDTO.setChildIds(String.join(",", Collections.singletonList(Integer.toString(expectedChild.getId()))));
+
+        int expectedFamilyTreeId = 2;
+        String expectedFamilyTreeStatement = "SELECT * FROM FAMILY_TREE_MEMBERS WHERE FAMILY_TREE_ID = " + expectedFamilyTreeId;
+        String expectedFamilyMemberBaseStatement = "SELECT * FROM FAMILY_TREE_MEMBERS WHERE ID = ";
+
+        ResultSet mockFamilyTreeResultSet = mock(ResultSet.class);
+        ResultSet mockChildResultSet = mock(ResultSet.class);
+
+        when(mockDbManager.query(expectedFamilyTreeStatement)).thenReturn(mockFamilyTreeResultSet);
+        when(mockDbManager.query(expectedFamilyMemberBaseStatement + Integer.toString(expectedChild.getId()))).thenReturn(mockChildResultSet);
+        when(mockFamilyTreeMembersMapper.map(mockFamilyTreeResultSet)).thenReturn(Collections.singletonList(expectedFamilyTreeMemberDTO));
+        when(mockFamilyTreeMembersMapper.map(mockChildResultSet)).thenReturn(Collections.emptyList());
+
+        FamilyTreeMemberDTO actualFamilyTreeMemberDTO = classToTest.getFamilyMembers(expectedFamilyTreeId).get(0);
+
+        assertEquals(0, actualFamilyTreeMemberDTO.getChildren().size());
     }
 }
